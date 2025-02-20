@@ -1,11 +1,22 @@
-import React from "react";
+import { React, useState } from "react";
 
 interface BoardProps {
     boardSize: number;
 }
 
 const Board: React.FC<BoardProps> = ({ boardSize }) => {
+     const [cellColors, setCellColors] = useState<string[]>(
+        Array(boardSize * boardSize).fill("white") // default color is white for each cell
+      );
+
+
     const handleCellClick = (index: number) => {
+        // TODO optimize this without copying the whole list
+        const newCellColors = [...cellColors]; // copy the existing cell colors
+        // Toggle the color between white and blue (you can choose any color logic)
+        newCellColors[index] = newCellColors[index] === "white" ? "blue" : "white";
+        setCellColors(newCellColors); // update state with the new colors
+
         // Calculate the row and column based on the index
         const row = Math.floor(index / boardSize);
         const col = index % boardSize;
@@ -25,6 +36,7 @@ const Board: React.FC<BoardProps> = ({ boardSize }) => {
         {Array.from({ length: boardSize * boardSize }).map((_, index) => (
             <div
                 key={index}
+                style={{ backgroundColor: cellColors[index] }}
                 className="w-12 h-12 border border-gray-500"
                 onClick={() => handleCellClick(index)}
             />
