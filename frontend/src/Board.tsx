@@ -1,4 +1,5 @@
 import { React, useState } from "react";
+import place_stone from './WebSocketService.tsx'
 
 interface BoardProps {
     boardSize: number;
@@ -8,7 +9,6 @@ const Board: React.FC<BoardProps> = ({ boardSize }) => {
      const [cellColors, setCellColors] = useState<string[]>(
         Array(boardSize * boardSize).fill("white") // default color is white for each cell
       );
-
 
     const handleCellClick = (index: number) => {
         // TODO optimize this without copying the whole list
@@ -20,6 +20,8 @@ const Board: React.FC<BoardProps> = ({ boardSize }) => {
         // Calculate the row and column based on the index
         const row = Math.floor(index / boardSize);
         const col = index % boardSize;
+
+        place_stone(col, row)
 
         // Log the row and column where the click happened
         console.log(`Clicked on cell at row: ${row}, column: ${col}`);

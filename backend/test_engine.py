@@ -1,5 +1,5 @@
 import pytest
-from engine import MoreGoatBoard
+from moreGoatBoard import MoreGoatBoard
 
 def test_board_empty():
     mgb = MoreGoatBoard(2, 3)
