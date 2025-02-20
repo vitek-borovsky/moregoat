@@ -13,6 +13,7 @@ pkgs.mkShell {
     ]))
 
     nodejs_20
+    tailwindcss
   ];
 
   shellHook = ''
