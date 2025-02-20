@@ -9,6 +9,7 @@ pkgs.mkShell {
         flask-socketio
         simple-websocket
         eventlet
+        pytest
     ]))
 
     nodejs_20

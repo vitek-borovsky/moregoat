@@ -17,10 +17,13 @@ class MoreGoatBoard:
 
     def __getitem__(self, index: tuple[int, int]) -> int:
         x, y = index
+        if x < 0 or y < 0: raise IndexError()
         return self._board[y][x]
 
     def __setitem__(self, index: tuple[int, int], value: int):
         x, y = index
+        if x < 0 or y < 0: raise IndexError()
+        if self[x, y] != self.CELL_EMPTY: raise RuntimeError()
         self._board[y][x] = value
 
     def __repr__(self) -> str:
@@ -87,6 +90,7 @@ class MoreGoatBoard:
         Returns:
             Number of stones captured
         """
+        if player not in range(0, self._player_count + 1): raise RuntimeError()
         self[x,y] = player
         return sum((
             self.__check_dead(player, x - 1, y),
