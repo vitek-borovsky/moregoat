@@ -36,6 +36,12 @@ class WebSocketService {
             this.user_id = id;
         });
 
+        this.socket.on("CAPTURED", (message) => {
+            console.log(`Captured recieved ${message}`);
+            // Convert the parts to numbers (integers in this case)
+            const [col, row] = message.split('x').map(part => parseInt(part, 10));
+        });
+
         this.socket.emit("request_id")
     }
 

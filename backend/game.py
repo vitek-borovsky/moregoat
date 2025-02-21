@@ -29,7 +29,7 @@ class Game:
 
     def __get_next_player(self) -> int:
         self._player_on_turn += 1
-        if self._player_on_turn == self.player_count:
+        if self._player_on_turn > self.player_count:
             self._player_on_turn = 1
 
         return self.get_player_on_turn()
@@ -37,9 +37,10 @@ class Game:
     def get_player_on_turn(self):
         return self._player_on_turn
 
-    def put_stone(self, player_id: int, x, y):
+    def put_stone(self, player_id: int, x, y)-> set[tuple[int,int]]:
         if player_id != self.get_player_on_turn():
-            raise RuntimeError()
+            raise RuntimeError(f"Player plays out of turn; player on turn `{self.get_player_on_turn()}`, player `{player_id}` played\n{self.board}")
 
-        self.board.put_stone(player_id, x, y)
+        res = self.board.put_stone(player_id, x, y)
         self.__get_next_player()
+        return res

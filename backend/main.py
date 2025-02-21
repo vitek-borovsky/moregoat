@@ -37,12 +37,16 @@ def stone_placed(payload):
     # socketio.emit("ACK-testing", "msg recieved")
     player_id, coor = payload.split('@')
     col, row = coor.split('x')
-    col, row = int(col), int(row)
+    player_id, col, row = int(player_id), int(col), int(row)
 
     try:
-        game.put_stone(player_id, col, row)
-    except RuntimeError:
-        print("ERROR placing stone")
+        captured = game.put_stone(player_id, col, row)
+        for stone in captured:
+            socketio.emit("CAPTURED", f"{stone[0]}x{stone[1]}")
+
+    except RuntimeError as err:
+        print("ERROR placing stone", err)
+        return
 
     # Retransmitting to all players and accepting the move
     socketio.emit("STONE_PLACED", payload)

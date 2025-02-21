@@ -23,7 +23,7 @@ class MoreGoatBoard:
     def __setitem__(self, index: tuple[int, int], value: int):
         x, y = index
         if x < 0 or y < 0: raise IndexError()
-        if self[x, y] != self.CELL_EMPTY: raise RuntimeError()
+        if value != self.CELL_EMPTY and self[x, y] != self.CELL_EMPTY: raise RuntimeError(f"Stone already at this possition {x},{y}\n{self}")
         self._board[y][x] = value
 
     def __repr__(self) -> str:
@@ -58,28 +58,28 @@ class MoreGoatBoard:
         ))
 
 
-    def __check_dead(self, player, x: int, y: int) -> int:
+    def __check_dead(self, player, x: int, y: int) -> set[tuple[int,int]]:
         """
         Checks if target stone is dead if so it removes
         targeted connected stones
 
         Returns:
-            Number of stones removed from the board
+            Stones captured
         """
-        if x not in range(self._board_size): return 0
-        if y not in range(self._board_size): return 0
+        if x not in range(self._board_size): return set()
+        if y not in range(self._board_size): return set()
 
         # Stones were not encloused by all sides
         connected_stones = set()
-        if self.__is_alive(player, x, y, connected_stones): return 0
+        if self.__is_alive(player, x, y, connected_stones): return set()
 
         # Connected stones are dead we can remove them from the board
         for x, y in connected_stones:
             self[x, y] = self.CELL_EMPTY
 
-        return len(connected_stones)
+        return connected_stones
 
-    def put_stone(self, player: int, x: int, y :int) -> int:
+    def put_stone(self, player: int, x: int, y :int) -> set[tuple[int,int]]:
         """
         Puts stone of targets player on board
         x-axis is horizontal <--->
@@ -88,14 +88,15 @@ class MoreGoatBoard:
             Player player_ids from 1-n inc
 
         Returns:
-            Number of stones captured
+            set of Stones captured
         """
-        if player not in range(0, self._player_count + 1): raise RuntimeError()
+        if player not in range(1, self._player_count + 1): raise RuntimeError(f"Wrong player id {player}")
+        print(f"\n\nbefore\n{self}")
         self[x,y] = player
-        return sum((
-            self.__check_dead(player, x - 1, y),
-            self.__check_dead(player, x + 1, y),
-            self.__check_dead(player, x, y - 1),
-            self.__check_dead(player, x, y + 1),
-        ))
+        print(f"after\n{self}")
+        # Succesfully placed stone at valid location
+        return self.__check_dead(player, x - 1, y) \
+            .union(self.__check_dead(player, x + 1, y)) \
+            .union(self.__check_dead(player, x, y - 1)) \
+            .union(self.__check_dead(player, x, y + 1))
 

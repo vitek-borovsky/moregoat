@@ -42,6 +42,18 @@ const Board: React.FC<BoardProps> = ({ boardSize }) => {
         console.log(`STONE PLACED ${player}@${col}x${row}`);
     }
 
+    const stone_captured = (col, row)  => {
+        const index = row * boardSize + col;
+
+        setCellColors((prevColors) => {
+            const newCellColors = [...prevColors]; // Copy the current state
+            newCellColors[index] = EMPTY_COLOR;
+            return newCellColors; // Return the updated state
+        });
+
+        console.log(`STONE CAPTURED ${col}x${row}`);
+    }
+
     wss.subscribe(stone_placed);
 
     return (
