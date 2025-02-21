@@ -12,7 +12,7 @@ app = Flask(__name__)
 # Set up Flask-SocketIO
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode="eventlet")
 
-game = Game(2,3)
+game = Game(2,5)
 
 # @app.route('/manual_send')
 # def manual_send():
@@ -33,7 +33,27 @@ def handle_disconnect():
 @socketio.on("stone_placed")
 def stone_placed(payload):
     print(payload)
-    socketio.emit("ACK-testing", "msg recieved")
+    # TODO handle not enough values to unpack
+    # socketio.emit("ACK-testing", "msg recieved")
+    player_id, coor = payload.split('@')
+    col, row = coor.split('x')
+    col, row = int(col), int(row)
+
+    try:
+        game.put_stone(player_id, col, row)
+    except RuntimeError:
+        print("ERROR placing stone")
+
+    # Retransmitting to all players and accepting the move
+    socketio.emit("STONE_PLACED", payload)
+
+@socketio.on("request_id")
+def request_id():
+    player_id = game.get_player_id()
+    # TODO
+    # if player_id == -1
+    socketio.emit("REQUEST_ID", player_id);
+    print(f"Giving player id { player_id }")
 
 # @app.before_request
 # def log_request():

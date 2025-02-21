@@ -1,31 +1,44 @@
-import { React, useState } from "react";
-import place_stone from './WebSocketService.tsx'
+import { React, useState, useEffect } from "react";
+import WebSocketService from './WebSocketService.tsx'
 
 interface BoardProps {
     boardSize: number;
 }
+
+const wss = new WebSocketService();
 
 const Board: React.FC<BoardProps> = ({ boardSize }) => {
      const [cellColors, setCellColors] = useState<string[]>(
         Array(boardSize * boardSize).fill("white") // default color is white for each cell
       );
 
-    const handleCellClick = (index: number) => {
-        // TODO optimize this without copying the whole list
-        const newCellColors = [...cellColors]; // copy the existing cell colors
-        // Toggle the color between white and blue (you can choose any color logic)
-        newCellColors[index] = newCellColors[index] === "white" ? "blue" : "white";
-        setCellColors(newCellColors); // update state with the new colors
+    useEffect(() => {
+        wss.subscribe(stone_placed);
+    }, []); // Empty dependency array ensures it runs only once
 
-        // Calculate the row and column based on the index
+    const handleCellClick = (index: number) => {
         const row = Math.floor(index / boardSize);
         const col = index % boardSize;
 
-        place_stone(col, row)
+        wss.place_stone(col, row)
 
         // Log the row and column where the click happened
         console.log(`Clicked on cell at row: ${row}, column: ${col}`);
     };
+
+    const stone_placed = (player, col, row)  => {
+        const index = row * boardSize + col;
+
+        setCellColors((prevColors) => {
+            const newCellColors = [...prevColors]; // Copy the current state
+            newCellColors[index] = newCellColors[index] === "white" ? "blue" : "white";
+            return newCellColors; // Return the updated state
+        });
+
+        console.log(`STONE PLACED ${player}@${col}x${row}`);
+    }
+
+    wss.subscribe(stone_placed);
 
     return (
         <div

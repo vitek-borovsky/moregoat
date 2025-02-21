@@ -2,32 +2,63 @@ import { useState, useEffect } from 'react';
 import { io } from "socket.io-client";
 
 const WEB_SOCKET_URL = "ws://localhost:5000"
-const socket = io("ws://localhost:5000");
+ // = io(WEB_SOCKET_URL);
 
-// const WebSocketComponent = () => {
-//     const [messages, setMessages] = useState([]);
-//     // const [isConnected, setIsConnected] = useState(false);
-//
-socket.on("connect", () => {
-    console.log("Connected to WebSocket server");
-});
+class WebSocketService {
+    private callback = null;
+    private socket = null;
+    private user_id = null;
 
-socket.on("disconnect", () => {
-    console.log("Disconnected from WebSocket server");
-});
+    constructor() {
+        this.socket = io(WEB_SOCKET_URL);
 
-socket.on("message", (message) => {
-    console.log(`Received message: ${message}`);
-});
+        this.socket.on("connect", () => {
+            console.log("Connected to WebSocket server");
+        });
 
-socket.on("ACK-testing", (message) => {
-    console.log(`Received ACK`);
-});
+        this.socket.on("disconnect", () => {
+            console.log("Disconnected from WebSocket server");
+        });
 
-// Improvement: rewrite this to json
-const place_stone = (col, row) => {
-    socket.emit("stone_placed", `${col}x${row}`)
+        this.socket.on("message", (message) => {
+            console.log(`Received message: ${message}`);
+        });
+
+        this.socket.on("STONE_PLACED", (message) => {
+            console.log(`Stone placed received ${message}`);
+            const [ user, col, row ] = this.parseStonePlacedMessage(message);
+            this.callback(user, col, row)
+        });
+
+        this.socket.on("REQUEST_ID", (id) => { // -1 if no Id available TODO
+            console.log(`Id_recieved ${id}`);
+            if (id == -1) return;
+            this.user_id = id;
+        });
+
+        this.socket.emit("request_id")
+    }
+
+    subscribe(callback) {
+        if (this.callback) return;
+        this.callback = callback
+    }
+
+    parseStonePlacedMessage(input) {
+        const regex = /^([^@]+)@([^x]+)x(.+)$/;
+        const match = input.match(regex);
+
+        if (match) {
+            const [, user, col, row] = match;
+            return [ user, Number(col), Number(row) ];
+        }
+        throw new Error("Invalid format");
+    }
+
+    // Improvement: rewrite this to json
+    place_stone = (col, row) => {
+        this.socket.emit("stone_placed", `${this.user_id}@${col}x${row}`)
+    }
 }
 
-export default place_stone
-
+export default WebSocketService

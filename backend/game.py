@@ -12,14 +12,20 @@ class Game:
         self.board = MoreGoatBoard(player_count, board_size)
         self._player_on_turn = 1
 
-        self.scores = { id : 0 for id in range(1, self.player_count + 1) }
+        # self.scores = { id : 0 for id in range(1, self.player_count + 1) }
 
-    def get_player_ids(self):
-        """
-        Getting player ids players are numbred 1 to player_count inc
-        This is helper method to avoid confusion
-        """
-        return list(range(1, self.player_count + 1))
+        self.last_used_id = 0
+        self.game_ready_to_start = False
+
+    def get_player_id(self) -> int:
+        # All players already joined
+        if self.game_ready_to_start: return -1
+
+        self.last_used_id += 1
+        if self.last_used_id == self.player_count:
+            self.game_ready_to_start = True
+
+        return self.last_used_id
 
     def __get_next_player(self) -> int:
         self._player_on_turn += 1
@@ -36,3 +42,4 @@ class Game:
             raise RuntimeError()
 
         self.board.put_stone(player_id, x, y)
+        self.__get_next_player()
