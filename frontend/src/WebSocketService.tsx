@@ -25,7 +25,7 @@ class WebSocketService {
         });
 
         this.socket.on("STONE_PLACED", (message) => {
-            console.log(`Stone placed received ${message}`);
+            // console.log(`Stone placed received ${message}`);
             const [ user, col, row ] = this.parseStonePlacedMessage(message);
             this.callback(user, col, row)
         });

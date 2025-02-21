@@ -52,7 +52,7 @@ def request_id():
     player_id = game.get_player_id()
     # TODO
     # if player_id == -1
-    socketio.emit("REQUEST_ID", player_id);
+    socketio.emit("REQUEST_ID", player_id, room=request.sid);
     print(f"Giving player id { player_id }")
 
 # @app.before_request

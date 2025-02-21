@@ -5,6 +5,10 @@ interface BoardProps {
     boardSize: number;
 }
 
+const EMPTY_COLOR = "white";
+// players are 1-indexed so black color is for error detection
+const PLAYER_COLORS = [ "black", "blue", "green", "yellow", "red" ];
+
 const wss = new WebSocketService();
 
 const Board: React.FC<BoardProps> = ({ boardSize }) => {
@@ -23,7 +27,7 @@ const Board: React.FC<BoardProps> = ({ boardSize }) => {
         wss.place_stone(col, row)
 
         // Log the row and column where the click happened
-        console.log(`Clicked on cell at row: ${row}, column: ${col}`);
+        // console.log(`Clicked on cell at row: ${row}, column: ${col}`);
     };
 
     const stone_placed = (player, col, row)  => {
@@ -31,7 +35,7 @@ const Board: React.FC<BoardProps> = ({ boardSize }) => {
 
         setCellColors((prevColors) => {
             const newCellColors = [...prevColors]; // Copy the current state
-            newCellColors[index] = newCellColors[index] === "white" ? "blue" : "white";
+            newCellColors[index] = PLAYER_COLORS[player];
             return newCellColors; // Return the updated state
         });
 
