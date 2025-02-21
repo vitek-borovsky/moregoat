@@ -17,7 +17,7 @@ const Board: React.FC<BoardProps> = ({ boardSize }) => {
       );
 
     useEffect(() => {
-        wss.subscribe(stone_placed);
+        wss.subscribe(stone_placed, stone_captured);
     }, []); // Empty dependency array ensures it runs only once
 
     const handleCellClick = (index: number) => {
@@ -53,8 +53,6 @@ const Board: React.FC<BoardProps> = ({ boardSize }) => {
 
         console.log(`STONE CAPTURED ${col}x${row}`);
     }
-
-    wss.subscribe(stone_placed);
 
     return (
         <div

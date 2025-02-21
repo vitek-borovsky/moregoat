@@ -5,7 +5,8 @@ const WEB_SOCKET_URL = "ws://localhost:5000"
  // = io(WEB_SOCKET_URL);
 
 class WebSocketService {
-    private callback = null;
+    private place_callback = null;
+    private capture_callback = null;
     private socket = null;
     private user_id = null;
 
@@ -27,7 +28,7 @@ class WebSocketService {
         this.socket.on("STONE_PLACED", (message) => {
             // console.log(`Stone placed received ${message}`);
             const [ user, col, row ] = this.parseStonePlacedMessage(message);
-            this.callback(user, col, row)
+            this.place_callback(user, col, row)
         });
 
         this.socket.on("REQUEST_ID", (id) => { // -1 if no Id available TODO
@@ -40,14 +41,16 @@ class WebSocketService {
             console.log(`Captured recieved ${message}`);
             // Convert the parts to numbers (integers in this case)
             const [col, row] = message.split('x').map(part => parseInt(part, 10));
+            this.capture_callback(col, row);
         });
 
         this.socket.emit("request_id")
     }
 
-    subscribe(callback) {
-        if (this.callback) return;
-        this.callback = callback
+    subscribe(place_callback, capture_callback) {
+        if (this.place_callback) return;
+        this.place_callback = place_callback;
+        this.capture_callback = capture_callback;
     }
 
     parseStonePlacedMessage(input) {
