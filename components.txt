@@ -1,0 +1,12 @@
+App
+- Create / Join game
+- Game
+    - Player on turn
+    - Game id
+    - ? Maybe legnd like (A, B, C ..., 1, 2, 3, ...)
+    - Board
+        - Squeres
+- End-screen
+    - Points per player
+    - play again
+
