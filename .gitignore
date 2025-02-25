@@ -1,3 +1,9 @@
+# pytest_cache
+__pycache__/
+backend/__pycache__/
+tests/__pycache__/
+tests/.pytest_cache/
+
 # Logs
 logs
 *.log
