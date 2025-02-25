@@ -1,9 +1,13 @@
 import { useEffect } from 'react';
 
-function Board() {
+interface BoardProps {
+    boardSize: number;
+}
+
+const Board: React.FC<BoardProps> = ({ boardSize }) => {
   return (
     <>
-        <p>This is board</p>
+        <p>This is board { boardSize }</p>
     </>
   );
 }

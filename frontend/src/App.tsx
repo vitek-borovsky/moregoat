@@ -11,7 +11,7 @@ function App() {
             <h1>Hello World</h1>
             <button onClick={wss.sendEcho}>Send Echo</button>
         </div>
-        <Board />
+        <Board boardSize={5} />
     </>
   );
 }
