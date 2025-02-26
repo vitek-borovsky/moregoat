@@ -52,3 +52,22 @@ def test_remove_strucure():
         [  2, 2, 2, 1,-1],
         [  0, 0, 1,-1,-1],
         [ -1,-1,-1,-1,-1]]
+
+def test_place_stone():
+    g = Game("tsarta", 3, 5)
+    # This one is diffrent
+    # careful when transitioning to fixtures
+    g.board = [
+        [ -1, 0, 1, 2, 2],
+        [ -1, 1, 1, 1, 2],
+        [  2, 2, 2, 1, 2],
+        [  0, 0, 1,-1, 2],
+        [  2, 2, 2, 2, 2]]
+
+    assert g.place_stone(3, 3, 0) == [0, 1, 10]
+    assert g.board == [
+        [ -1, 0, 1,-1,-1],
+        [ -1, 1, 1, 1,-1],
+        [  2, 2, 2, 1,-1],
+        [  0, 0,-1, 0,-1],
+        [ -1,-1,-1,-1,-1]]
