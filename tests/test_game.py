@@ -22,3 +22,16 @@ def test_get_structure():
     assert g.get_structure(5, 0) == set()
     assert g.get_structure(0, 5) == set()
 
+def test_is_strucure_alive():
+    g = Game("tsarta", 3, 5)
+    g.board = [
+        [ -1, 0, 1, 2, 2],
+        [ -1, 1, 1, 1, 2],
+        [  2, 2, 2, 1, 2],
+        [  0, 0, 1, 2, 2],
+        [  2, 2, 2, 2, 2]]
+
+    helper = lambda x, y: g._is_structure_alive(g.get_structure(x, y))
+
+    assert helper(0, 0)
+    assert not helper(0, 4)
