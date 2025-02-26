@@ -13,6 +13,10 @@ class Game:
         col, row = index
         return self.board[row][col]
 
+    def __setitem__(self, index: tuple[int, int], value):
+        col, row = index
+        self.board[row][col] = value
+
     def _is_on_board(self, col, row):
         if col not in range(0, self.board_size): return False
         if row not in range(0, self.board_size): return False
@@ -25,7 +29,7 @@ class Game:
     def print_board(self) -> None:
         print("\n".join([ " ".join([ f"{x:2}" for x in row ]) for row in self.board ]))
 
-    def get_structure(self, col, row) -> set[tuple[int, int]]:
+    def _get_structure(self, col, row) -> set[tuple[int, int]]:
         """
         Gets all connected stones of given structure
 
@@ -38,7 +42,7 @@ class Game:
         return structure
 
 
-    def _get_structure_impl(self, col, row, value, structure):
+    def _get_structure_impl(self, col, row, value, structure) -> None:
         """
         Gets all connected stones of given structure
 
@@ -53,8 +57,6 @@ class Game:
         for col_, row_ in self._get_neighbours(col, row):
             self._get_structure_impl(col_, row_, value, structure)
 
-        return structure
-
     def _is_structure_alive(self, structure: set[tuple[int, int]]) -> bool:
         """
         Checks whether a structure is alive acording to go rules:
@@ -66,3 +68,10 @@ class Game:
                     return True
 
         return False
+
+    def _remove_structure(self, structure: set[tuple[int, int]]) -> None:
+        """
+        Removes stones from the board
+        """
+        for col, row in structure:
+            self[col, row] = self.SQUERE_EMPTY
