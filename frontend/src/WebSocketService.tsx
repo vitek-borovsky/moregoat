@@ -24,11 +24,16 @@ class WebSocketService {
         });
     }
 
+    // TODO add functionality to check socket is still valid
+    create_game = (player_count, board_size) => {
+        this.socket.emit("create_game", `{ "player_count" = ${player_count}, "board_size" = ${board_size} }`);
+    }
+
+    join_game = (game_id) => {
+        this.socket.emit("join_game", `${game_id}`);
+    }
+
     sendEcho = () => {
-        if (!this.socket) {
-            console.log("Cannot send Hello: Socket in invalid-state");
-            return;
-        }
         this.socket.emit("ping", "HELLO");
     }
 }

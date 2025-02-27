@@ -1,5 +1,5 @@
 class Game:
-    def __init__(self, game_id, player_count: int, board_size: int) -> None:
+    def __init__(self, game_id: str, player_count: int, board_size: int) -> None:
         self.game_id = game_id
         self.player_count = player_count
         self.board_size = board_size
