@@ -35,7 +35,7 @@ shift $((OPTIND-1))
 
 start_backend() {
     cd backend
-    python server.py
+    python main.py
 }
 
 start_frontend() {
