@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import Squere from './Squere.tsx';
+import Squere from './Squere';
 
 interface BoardProps {
     boardSize: number;

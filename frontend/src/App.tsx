@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import WebSocketService from './WebSocketService.tsx'
-import Board from './Board.tsx'
+import Board from './components/Board/Board'
 import './App.css'
 
 function App() {
