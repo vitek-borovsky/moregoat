@@ -6,21 +6,20 @@ import './App.css'
 
 function App() {
     const wss = useRef(null);
+    const [isConnected, setIsConnected] = useState(false);
     const [gameStarted, setGameStarted] = useState(false);
     useEffect(() => {
         wss.current = new WebSocketService()
+        setIsConnected(true);
     }, [])
 
     return (
       <>
-        <div>
-          <h1>Hello World</h1>
-          <button onClick={wss.sendEcho}>Send Echo</button>
-        </div>
+        <h1>Hello World</h1>
+        { isConnected && <button onClick={ wss.current.sendEcho }>Send Echo</button> }
+        { isConnected && (gameStarted || <CreateGame createGame = { wss.current.createGame }/>) }
+        { isConnected && gameStarted && <Board boardSize={5} /> }
 
-        { gameStarted || <CreateGame /> }
-        { gameStarted && <Board boardSize={5} /> }
-        <button onClick={() => setGameStarted(true)}>Start Game</button>
       </>
     );
 }
