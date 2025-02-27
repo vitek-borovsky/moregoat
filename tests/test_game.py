@@ -1,7 +1,7 @@
-from backend.game import Game
+from backend.board import Board
 
 def test_get_structure():
-    g = Game("tsarta", 3, 5)
+    g = Board(3, 5)
     g.board = [
         [ -1, 0, 1, 2, 2],
         [ -1, 1, 1, 1, 2],
@@ -23,7 +23,7 @@ def test_get_structure():
     assert g._get_structure(0, 5) == set()
 
 def test_is_strucure_alive():
-    g = Game("tsarta", 3, 5)
+    g = Board(3, 5)
     g.board = [
         [ -1, 0, 1, 2, 2],
         [ -1, 1, 1, 1, 2],
@@ -37,7 +37,7 @@ def test_is_strucure_alive():
     assert not helper(0, 4)
 
 def test_remove_strucure():
-    g = Game("tsarta", 3, 5)
+    g = Board(3, 5)
     g.board = [
         [ -1, 0, 1, 2, 2],
         [ -1, 1, 1, 1, 2],
@@ -54,7 +54,7 @@ def test_remove_strucure():
         [ -1,-1,-1,-1,-1]]
 
 def test_place_stone():
-    g = Game("tsarta", 3, 5)
+    g = Board(3, 5)
     # This one is diffrent
     # careful when transitioning to fixtures
     g.board = [
