@@ -5,6 +5,7 @@ from flask import Flask, request
 from flask_socketio import SocketIO, join_room
 import random
 import string
+import json
 
 from game import Game
 
@@ -35,7 +36,9 @@ def handle_test(payload):
     socketio.emit("PING", payload, room=request.sid)
 
 @socketio.on("create_game")
-def create_game(player_count: int, board_size: int):
+def create_game(payload):
+    data = json.loads(payload)
+    player_count, board_size = data["player_count"], data["board_size"]
     assert player_count in range(2, 6)
     assert board_size in range(5, 21, 2)
     while (game_id := get_random_string(3)) in games: pass
