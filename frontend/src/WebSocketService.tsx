@@ -20,7 +20,7 @@ class WebSocketService {
         });
 
         this.socket.on("JOIN_GAME", (game_id) => {
-            console.log(`Game ${game_id} started`)
+            console.log(`Joined Game(game_id=${game_id})`)
         });
     }
 
