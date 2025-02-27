@@ -27,7 +27,7 @@ class WebSocketService {
     // TODO add functionality to check socket is still valid
     createGame = (player_count, board_size) => {
         console.log(`Game created player_count=${player_count} board_size=${board_size}`);
-        this.socket.emit("create_game", `{ "player_count" = ${player_count}, "board_size" = ${board_size} }`);
+        this.socket.emit("create_game", `{ "player_count" : ${player_count}, "board_size" : ${board_size} }`);
     }
 
     join_game = (game_id) => {
