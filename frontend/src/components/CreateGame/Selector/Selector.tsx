@@ -3,13 +3,13 @@ import React, { useState } from "react";
 interface SelectorProps {
   options: number[];
   defaultValue: number;
+  setter: React.Dispatch<React.SetStateAction<number>>;
+
 }
 
-const Selector: React.FC<SelectorProps> = ({ options, defaultValue }) => {
-  const [selectedOption, setSelectedOption] = useState<number | null>(defaultValue);
-
+const Selector: React.FC<SelectorProps> = ({ options, defaultValue, setter }) => {
   const handleClick = (option: string) => {
-    setSelectedOption(option);
+    setter(option);
   };
 
   return (
@@ -22,7 +22,7 @@ const Selector: React.FC<SelectorProps> = ({ options, defaultValue }) => {
             padding: "10px",
             border: "1px solid #000",
             cursor: "pointer",
-            backgroundColor: selectedOption === option ? "red" : "white",
+            backgroundColor: defaultValue === option ? "red" : "white",
           }}
         >
           {option}
