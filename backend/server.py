@@ -1,18 +1,7 @@
-import eventlet
-
-from backend.server import Server
-
 from flask import Flask, request
 from flask_socketio import SocketIO, join_room
-import random
-import string
+from games_manager import GamesManager
 import json
-
-
-from game import Game
-
-def get_random_string(length: int) -> str:
-    return ''.join(random.choices(string.ascii_letters + string.digits, k=length))
 
 
 class Server:
@@ -25,9 +14,9 @@ class Server:
         socketio:
     """
     def __init__(self, app_name: str) -> None:
-        self.games: dict[str, Game ] = { }
         self.app = Flask(app_name)
         self.socketio = SocketIO(self.app, cors_allowed_origins="*", async_mode="eventlet")
+        self.games_manager = GamesManager()
 
         self.socketio.on_event("connect", self.handle_connect)
         self.socketio.on_event("disconnect", self.handle_disconnect)
@@ -46,21 +35,20 @@ class Server:
 
     def handle_ping(self, payload):
         print(f"Recieved test {payload}, retransmitting")
-        socketio.emit("PING", payload, room=request.sid)
+        self.socketio.emit("PING", payload, room=request.sid)
 
     def handle_create_game(self, payload):
         data = json.loads(payload)
         player_count, board_size = data["player_count"], data["board_size"]
         assert player_count in range(2, 6)
         assert board_size in range(5, 21, 2)
-        while (game_id := get_random_string(3)) in self.games: pass
-        self.games[game_id] = Game(game_id, player_count, board_size)
-        player_id = self.games[game_id].request_player_id()
-        print(f"Game created { self.games[game_id].__repr__() }")
-        socketio.emit("JOIN_GAME", "{" + f"game_id : { game_id }, player_id : { player_id }" + "}", room=request.sid)
+
+        game_id, player_id = self.games_manager.create_game(player_count, board_size)
+        self.socketio.emit("JOIN_GAME", "{" + f"game_id : { game_id }, player_id : { player_id }" + "}", room=request.sid)
+        join_room(game_id)
 
     def handle_join_game(self, game_id: str):
         join_room(game_id)
-        player_id = self.games[game_id].request_player_id()
-        socketio.emit("JOIN_GAME", "{" + f"game_id : { game_id }, player_id : { player_id }" + "}", room=request.sid)
+        player_id = self.games_manager[game_id].request_player_id()
+        self.socketio.emit("JOIN_GAME", "{" + f"game_id : { game_id }, player_id : { player_id }" + "}", room=request.sid)
 
