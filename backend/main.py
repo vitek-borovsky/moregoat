@@ -2,7 +2,7 @@ import eventlet
 
 eventlet.monkey_patch()
 
-from backend.server import Server
+from server import Server
 from flask import Flask
 
 PORT = 5000
