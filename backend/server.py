@@ -35,7 +35,7 @@ class Server:
 
     def handle_ping(self, payload):
         print(f"Recieved test {payload}, retransmitting")
-        self.socketio.emit("PING", payload, room=request.sid)
+        self.send_PING(payload, request)
 
     def handle_create_game(self, payload):
         data = json.loads(payload)
@@ -44,11 +44,21 @@ class Server:
         assert board_size in range(5, 21, 2)
 
         game_id, player_id = self.games_manager.create_game(player_count, board_size)
-        self.socketio.emit("JOIN_GAME", "{" + f"game_id : { game_id }, player_id : { player_id }" + "}", room=request.sid)
+        self.send_JOIN_GAME(game_id, player_id, request)
         join_room(game_id)
 
     def handle_join_game(self, game_id: str):
         join_room(game_id)
         player_id = self.games_manager[game_id].request_player_id()
+        self.send_JOIN_GAME(game_id, player_id, request)
+
+    ##############################
+    ##############################
+
+    def send_PING(self, payload, request) -> None:
+        self.socketio.emit("PING", payload, room=request.sid)
+
+    def send_JOIN_GAME(self, game_id: str, player_id: int, request) -> None:
         self.socketio.emit("JOIN_GAME", "{" + f"game_id : { game_id }, player_id : { player_id }" + "}", room=request.sid)
+
 

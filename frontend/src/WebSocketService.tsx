@@ -19,8 +19,8 @@ class WebSocketService {
             console.log(`PING recieved ${payload}`);
         });
 
-        this.socket.on("JOIN_GAME", (game_id) => {
-            console.log(`Joined Game(game_id=${game_id})`)
+        this.socket.on("JOIN_GAME", (payload) => {
+            console.log(`Joined Game(${payload})`)
         });
     }
 
