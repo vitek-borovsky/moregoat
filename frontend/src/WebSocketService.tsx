@@ -5,6 +5,7 @@ const WEB_SOCKET_URL = "ws://localhost:5000";
 
 class WebSocketService {
     private socket = io(WEB_SOCKET_URL);
+    private join_game_callback = null;
 
     constructor() {
         this.socket.on("connect", () => {
@@ -21,7 +22,15 @@ class WebSocketService {
 
         this.socket.on("JOIN_GAME", (payload) => {
             console.log(`Joined Game(${payload})`)
+
+            const data = JSON.parse(payload);
+            this.join_game_callback(data.game_id, data.player_id);
         });
+    }
+
+    subscribe_join_game_callback = (callback) => {
+        this.join_game_callback = callback;
+        console.log("join_game_callback subscribed");
     }
 
     // TODO add functionality to check socket is still valid

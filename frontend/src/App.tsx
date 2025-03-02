@@ -8,10 +8,17 @@ function App() {
     const wss = useRef(null);
     const [isConnected, setIsConnected] = useState(false);
     const [gameStarted, setGameStarted] = useState(false);
+
+    const join_game = (game_id, player_id) => {
+        setGameStarted(true);
+    }
+
     useEffect(() => {
         wss.current = new WebSocketService()
         setIsConnected(true);
+        wss.current.subscribe_join_game_callback(join_game);
     }, [])
+
 
     return (
       <>
