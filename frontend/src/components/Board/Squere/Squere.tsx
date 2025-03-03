@@ -13,7 +13,7 @@ const Squere: React.FC<SquereProps> = ({ color, onClick }) => {
 
     return (
         <div
-        className="grid border gorder-gray-500 w-[50px] h-[50px]"
+        className="grid border border-gray-400 w-[100px] h-[100px] p-0 m-0 gap-0"
         onClick={onClick}
         style={{
             backgroundColor: getColor(color)

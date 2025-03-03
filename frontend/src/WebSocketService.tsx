@@ -36,7 +36,11 @@ class WebSocketService {
     // TODO add functionality to check socket is still valid
     createGame = (board_size, player_count) => {
         console.log(`Game created player_count=${player_count} board_size=${board_size}`);
-        this.socket.emit("create_game", `{ "player_count" : ${player_count}, "board_size" : ${board_size} }`);
+        const data = {
+            "player_count" : player_count,
+            "board_size" : board_size
+        };
+        this.socket.emit("create_game", JSON.stringify(data));
     }
 
     join_game = (game_id) => {
@@ -46,6 +50,14 @@ class WebSocketService {
 
     sendEcho = () => {
         this.socket.emit("ping", "HELLO");
+    }
+
+    placeStone = (col: number, row: number) => {
+        const data = {
+            "col" : col,
+            "row" : row
+        };
+        this.socket.emit("stone_placed", JSON.stringify(data));
     }
 }
 

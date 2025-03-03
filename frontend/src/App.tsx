@@ -30,7 +30,7 @@ function App() {
         <h1>Hello World</h1>
         { isConnected && <button onClick={ wss.current.sendEcho }>Send Echo</button> }
         { isConnected && (gameStarted || <CreateGame createGame = { wss.current.createGame }/>) }
-        { isConnected && gameStarted && <Board boardSize={boardSize} /> }
+        { isConnected && gameStarted && <Board boardSize={boardSize} placeStone={ wss.current.placeStone } /> }
       </>
     );
 }
