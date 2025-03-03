@@ -30,7 +30,7 @@ class Server:
     def handle_connect(self, _):
         print("Client connected")
 
-    def handle_disconnect(self, _):
+    def handle_disconnect(self):
         print("Client disconnected")
 
     def handle_ping(self, payload):
