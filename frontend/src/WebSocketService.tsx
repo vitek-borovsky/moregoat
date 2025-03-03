@@ -24,7 +24,7 @@ class WebSocketService {
             console.log(`Joined Game(${payload})`)
 
             const data = JSON.parse(payload);
-            this.join_game_callback(data.game_id, data.player_id);
+            this.join_game_callback(data.game_id, data.player_id, data.board_size, data.player_count);
         });
     }
 

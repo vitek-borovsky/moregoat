@@ -59,6 +59,12 @@ class Server:
         self.socketio.emit("PING", payload, room=request.sid)
 
     def send_JOIN_GAME(self, game_id: str, player_id: int, request) -> None:
-        self.socketio.emit("JOIN_GAME", "{" + f"\"game_id\" : \"{ game_id }\", \"player_id\" : { player_id }" + "}", room=request.sid)
+        data = {
+            "game_id": game_id,
+            "player_id": player_id,
+            "board_size": self.games_manager[game_id].board_size,
+            "player_count": self.games_manager[game_id].player_count,
+        }
+        self.socketio.emit("JOIN_GAME", json.dumps(data), room=request.sid)
 
 

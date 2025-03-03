@@ -9,7 +9,12 @@ function App() {
     const [isConnected, setIsConnected] = useState(false);
     const [gameStarted, setGameStarted] = useState(false);
 
-    const join_game = (game_id, player_id) => {
+    const [boardSize, setBoardSize] = useState<number | null>(null);
+    const [playerCount, setPlayerCount] = useState<number | null>(null);
+
+    const join_game = (game_id, player_id, board_size, player_count) => {
+        setBoardSize(board_size);
+        setPlayerCount(player_count);
         setGameStarted(true);
     }
 
@@ -25,8 +30,7 @@ function App() {
         <h1>Hello World</h1>
         { isConnected && <button onClick={ wss.current.sendEcho }>Send Echo</button> }
         { isConnected && (gameStarted || <CreateGame createGame = { wss.current.createGame }/>) }
-        { isConnected && gameStarted && <Board boardSize={5} /> }
-
+        { isConnected && gameStarted && <Board boardSize={boardSize} /> }
       </>
     );
 }
