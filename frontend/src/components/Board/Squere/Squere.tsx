@@ -1,13 +1,16 @@
-interface SquereProps { }
+interface SquereProps {
+    color: string;
+    onClick: (number) => void;
+}
 
-const Squere: React.FC<SquereProps> = ({}) => {
+const Squere: React.FC<SquereProps> = ({ color, onClick }) => {
     return (
         <div
-        className="border border-gray-500 w-[20px] h-[20px]"
+        className="grid border gorder-gray-500 w-[50px] h-[50px]"
+        onClick={onClick}
         style={{
-            backgroundColor: "purple"
+            backgroundColor: "yellow"
         }}>
-        SSS
         </div>
     );
 }
