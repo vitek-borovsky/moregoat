@@ -7,6 +7,9 @@ class WebSocketService {
     private socket = io(WEB_SOCKET_URL);
     private join_game_callback = null;
 
+    private game_id = null;
+    private player_id = null;
+
     constructor() {
         this.socket.on("connect", () => {
             console.log("Connected to backend");
@@ -24,7 +27,9 @@ class WebSocketService {
             console.log(`Joined Game(${payload})`)
 
             const data = JSON.parse(payload);
-            this.join_game_callback(data.game_id, data.player_id, data.board_size, data.player_count);
+            this.game_id = data.game_id;
+            this.player_id = data.player_id;
+            this.join_game_callback(data.player_id, data.board_size, data.player_count);
         });
     }
 
@@ -54,6 +59,8 @@ class WebSocketService {
 
     placeStone = (col: number, row: number) => {
         const data = {
+            "game_id" : this.game_id,
+            "player_id" : this.player_id,
             "col" : col,
             "row" : row
         };

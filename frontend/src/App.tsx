@@ -12,7 +12,7 @@ function App() {
     const [boardSize, setBoardSize] = useState<number | null>(null);
     const [playerCount, setPlayerCount] = useState<number | null>(null);
 
-    const join_game = (game_id, player_id, board_size, player_count) => {
+    const join_game = (player_id, board_size, player_count) => {
         setBoardSize(board_size);
         setPlayerCount(player_count);
         setGameStarted(true);

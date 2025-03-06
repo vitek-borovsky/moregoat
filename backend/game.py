@@ -8,7 +8,7 @@ class Game:
         self.next_player_id = 0
 
     def __repr__(self) -> str:
-        return f"Game(game_id={ self.game_id }, player_count={ self.player_count }, board_size={ self.board_size }"
+        return f"Game({ self.game_id }, { self.player_count }, board_size={ self.board_size })"
 
     def _increase_player_on_turn(self) -> None:
         self.player_on_turn = (self.player_on_turn + 1) % self.player_count

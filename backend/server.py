@@ -23,6 +23,8 @@ class Server:
         self.socketio.on_event("ping", self.handle_ping)
         self.socketio.on_event("create_game", self.handle_create_game)
         self.socketio.on_event("join_game", self.handle_join_game)
+        self.socketio.on_event("stone_placed", self.handle_stone_placed)
+
 
     def start_server(self, port: int, debug=False) -> None:
         self.socketio.run(self.app, port=port, debug=debug)
@@ -51,6 +53,12 @@ class Server:
         join_room(game_id)
         player_id = self.games_manager[game_id].request_player_id()
         self.send_JOIN_GAME(game_id, player_id, request)
+
+    def handle_stone_placed(self, payload: str):
+        print("recieved stone_placed", payload)
+        data = json.loads(payload)
+        self.games_manager[data["game_id"]].place_stone(data["col"], data["row"], data["player_id"])
+
 
     ##############################
     ##############################
