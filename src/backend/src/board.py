@@ -1,3 +1,5 @@
+from error import SquareOccuptied, NotOnBoard
+
 class Board:
     def __init__(self, player_count: int, board_size: int) -> None:
         self.player_count = player_count
@@ -59,7 +61,7 @@ class Board:
     def _is_structure_alive(self, structure: set[tuple[int, int]]) -> bool:
         """
         Checks whether a structure is alive acording to go rules:
-        - Structure is alive if one of its stones neighbours an empty squere
+        - Structure is alive if one of its stones neighbours an empty square
         """
         for squere in structure:
             for col, row in self._get_neighbours(*squere):
@@ -75,7 +77,7 @@ class Board:
         for col, row in structure:
             self[col, row] = self.SQUERE_EMPTY
 
-    def place_stone(self, col: int, row: int, player_id: int) -> list[int]:
+    def place_stone(self, col: int, row: int, player_id: int) -> tuple[list[int], set[tuple[int, int]]]:
         """
         Places a stone of given player and removes captured stones
 
@@ -84,12 +86,21 @@ class Board:
             row: row where to place stone
             player_id: player_id of player that is placing stones
 
+        Errors:
+            - NotOnBoard - invalid (col,row) pair is supplied
+            - SquareOccuptied - Square not empty
+
         Returns:
-            The list of stones captured per player
-            rv[i] == player captured rv[i] stones of player with id i
+            - The list of stones captured per player
+              rv[i] == player captured rv[i] stones of player with id i
+            - The list of all captured stones
         """
+        # TODO cleanup this horrible function
         if not self._is_on_board(col, row):
-            raise RuntimeError("OOR")
+            raise NotOnBoard(f"({col}, {row}) is not a valid square")
+
+        if self[col, row] != self.SQUERE_EMPTY:
+            raise SquareOccuptied(f"On ({col}, {row}) is already stone of player {self[col, row]}")
 
         self[col, row] = player_id
         neighbours = self._get_neighbours(col, row)
@@ -104,7 +115,7 @@ class Board:
         if self._get_structure(col, row) in neighbour_structures:
             neighbour_structures.remove(self._get_structure(col, row))
 
-        res = [ 0 for _ in range(self.player_count) ]
+        point_changes_per_player = [ 0 for _ in range(self.player_count) ]
 
         # We need to mark dead structures first because they can be from diffrent players
         # and capturing one can make the other "alive"
@@ -116,7 +127,11 @@ class Board:
         for st in marked_structures:
             col, row = list(st)[0]
             captured_player_id = self[col, row]
-            res[captured_player_id] += len(st)
+            point_changes_per_player[captured_player_id] += len(st)
             self._remove_structure(st)
 
-        return res
+        marked_points = set()
+        for st in marked_structures:
+            marked_points |= st
+
+        return point_changes_per_player, marked_points

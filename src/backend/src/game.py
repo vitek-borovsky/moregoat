@@ -1,4 +1,5 @@
 from board import Board
+from error import PlayerOutOfTurn
 
 class Game:
     def __init__(self, game_id: str, player_count: int, board_size: int) -> None:
@@ -26,10 +27,11 @@ class Game:
         self.next_player_id += 1
         return id
 
-    def place_stone(self, col: int, row: int, player_id):
+    def place_stone(self, col: int, row: int, player_id: int) -> tuple[list[int], set[tuple[int, int]]]:
         if player_id != self.player_on_turn:
-            raise RuntimeError("Not your turn") #TODO
-        points_changes = self.board.place_stone(col, row, player_id)
+            raise PlayerOutOfTurn(f"Player plays but not on turn.\n\tPlayer who played={player_id}\n\tPlayer on turn={self.player_on_turn}")
+
+        points_changes, captured_stones = self.board.place_stone(col, row, player_id)
         for i, points in enumerate(points_changes):
             # Add points to the player that played a move
             # for each captured stone
@@ -38,4 +40,5 @@ class Game:
             self.points[i] -= points
 
         self._increase_player_on_turn()
+        return points_changes, captured_stones
 
