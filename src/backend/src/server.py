@@ -18,13 +18,14 @@ class Server:
         self.socketio = SocketIO(self.app, cors_allowed_origins="*", async_mode="eventlet")
         self.games_manager = GamesManager()
 
+        self.app.add_url_rule("/hello", "hello", lambda : "hello")
+
         self.socketio.on_event("connect", self.handle_connect)
         self.socketio.on_event("disconnect", self.handle_disconnect)
         self.socketio.on_event("ping", self.handle_ping)
         self.socketio.on_event("create_game", self.handle_create_game)
         self.socketio.on_event("join_game", self.handle_join_game)
         self.socketio.on_event("stone_placed", self.handle_stone_placed)
-
 
     def start_server(self, port: int, debug=False) -> None:
         self.socketio.run(self.app, port=port, debug=debug)

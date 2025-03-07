@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { io } from "socket.io-client";
 
-const WEB_SOCKET_URL = "ws://localhost:5000";
+const WEB_SOCKET_URL = "ws://localhost:5000"
 
 class WebSocketService {
     private socket = io(WEB_SOCKET_URL);

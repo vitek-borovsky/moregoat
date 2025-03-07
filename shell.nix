@@ -13,9 +13,11 @@ pkgs.mkShell {
 
     nodejs_20
     tailwindcss
+
   ];
 
   shellHook = ''
+    alias k="kubectl"
     echo "Flask development environment activated!"
   '';
 }

@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: moregoat-frontend-deployment
+  labels:
+    app: moregoat
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: moregoat
+  template:
+    metadata:
+      labels:
+        app: moregoat
+    spec:
+      containers:
+      - name: moregoat-frontend
+        image: moregoat-frontend:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 5173
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: moregoat-service
+spec:
+  selector:
+    app: moregoat
+  ports:
+    - protocol: TCP
+      port: 5173
+      targetPort: 5173
+      nodePort: 30000
+      name: grpc
+  type: NodePort
