@@ -2,26 +2,40 @@ import { useState, useEffect } from 'react';
 import Square from './Square';
 import { useAppSelector } from "../../store";
 
+const SQUARE_EMPTY = -1
+
 interface BoardProps {
     boardSize: number;
 }
 
 const Board: React.FC<BoardProps> = ({ boardSize }) => {
-    const [board, setBoard] = useState(Array(boardSize * boardSize).fill(-1));
+    const [board, setBoard] = useState(Array(boardSize * boardSize).fill(SQUARE_EMPTY));
 
     const wss = useAppSelector((state) => state.global.webSocketService);
 
     const stonePlaced = (col: number, row: number, player_id: number) => {
         const index = boardSize * row + col;
         setBoard((prevBoard) => {
-          const newBoard = [...prevBoard];
+            let newBoard = [...prevBoard];
             newBoard[index] = player_id;
+            return newBoard;
+        });
+    }
+
+    const stoneCaptured = (stones: number[][]) => {
+        setBoard((prevBoard) => {
+            let newBoard = [...prevBoard];
+            stones.forEach(([col, row]) => {
+                const index = boardSize * row + col;
+                newBoard[index] = SQUARE_EMPTY;
+            });
             return newBoard;
         });
     }
 
     useEffect(() => {
         wss.subscribeStonePlacedCallback(stonePlaced);
+        wss.subscribeStoneCapturedCallback(stoneCaptured);
     }, []);
 
     const handleClick = (index: number) => {

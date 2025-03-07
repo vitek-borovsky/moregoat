@@ -93,6 +93,7 @@ class Server:
         self.socketio.emit("STONE_PLACED", json.dumps(data), room=game_id)
 
     def send_STONE_CAPTURED(self, game_id: str, captured_stones: set[tuple[int, int]]) -> None:
+        if len(captured_stones) == 0: return
         data = {
             "game_id": game_id,
             "captured_stones": list(captured_stones)
