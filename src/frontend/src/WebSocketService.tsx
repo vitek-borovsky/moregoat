@@ -11,6 +11,7 @@ class WebSocketService {
     private player_id = null;
     private player_count = null;
 
+    getGameId = () => this.game_id;
     getPlayerId = () => this.player_id;
     getPlayerCount = () => this.player_count;
 
