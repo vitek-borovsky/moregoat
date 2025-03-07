@@ -54,8 +54,9 @@ kubectl apply \
     -f backend-deployment.yaml \
     -f frontend-deployment.yaml
 
-while kubectl get pod --no-headers | grep -q -v -E "Running"; do
-    echo "Some pods are not in Running state."
+CONTAINER_COUNT=2
+while [ $(kubectl get pods --no-headers | grep -c "Running") -lt $CONTAINER_COUNT ]; do
+    echo "Waiting for containers to start..."
     sleep 5
 done
 
@@ -73,4 +74,7 @@ cleanup() {
 }
 
 trap cleanup SIGINT
+
+notify-send "New version started"
+
 wait

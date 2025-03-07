@@ -1,26 +1,29 @@
 import { configureStore, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
+import WebSocketService from './WebSocketService.tsx'
 
 // Define the state type
 interface GlobalState {
-  value: string;
+  webSocketService: WebSocketService;
+  value: str | null;
 }
 
 // Initial state
 const initialState: GlobalState = {
-  value: "Hello World, from global state",
+  webSocketService: new WebSocketService(),
+  value: "initial value",
 };
 
-// Create a Redux slice
 const globalSlice = createSlice({
   name: "global",
   initialState,
   reducers: {
-    setValue: (state, action: PayloadAction<string>) => {
+    setValue: (state, action: PayloadAction<string | null>) => {
       state.value = action.payload;
     },
   },
 });
+
 
 // Export actions
 export const { setValue } = globalSlice.actions;
