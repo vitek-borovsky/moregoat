@@ -1,5 +1,3 @@
-import React, { useState } from "react";
-
 interface SelectorProps {
   options: number[];
   defaultValue: number;
@@ -8,7 +6,7 @@ interface SelectorProps {
 }
 
 const Selector: React.FC<SelectorProps> = ({ options, defaultValue, setter }) => {
-  const handleClick = (option: string) => {
+  const handleClick = (option: number) => {
     setter(option);
   };
 

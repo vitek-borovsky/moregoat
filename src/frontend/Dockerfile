@@ -13,8 +13,7 @@ RUN npm install
 # Copy the rest of the application files to the container
 COPY . .
 
-# For now silencing warnings #TODO
-RUN npm run build ||:
+RUN npm run build
 
 EXPOSE 5173
 

@@ -1,15 +1,15 @@
-import { useEffect } from 'react';
 import { io } from "socket.io-client";
 
 const WEB_SOCKET_URL = "ws://localhost:5000"
 
 class WebSocketService {
     private socket = io(WEB_SOCKET_URL);
-    private join_game_callback = null;
 
-    private game_id = null;
-    private player_id = null;
-    private player_count = null;
+    private join_game_callback: ((playerId: number, boardSize: number) => void) | null = null;
+
+    private game_id: string | null = null;
+    private player_id: number | null = null;
+    private player_count: number | null = null;
 
     getGameId = () => this.game_id;
     getPlayerId = () => this.player_id;
@@ -36,7 +36,7 @@ class WebSocketService {
             this.player_id = data.player_id;
             this.player_count = data.player_count;
 
-            this.join_game_callback(data.player_id, data.board_size);
+            this.join_game_callback!(data.player_id, data.board_size);
         });
 
         this.socket.on("STONE_PLACED", (payload) => {
@@ -44,13 +44,13 @@ class WebSocketService {
         });
     }
 
-    subscribe_join_game_callback = (callback) => {
+    subscribe_join_game_callback = (callback: (player_id: number, board_size: number) => void) => {
         this.join_game_callback = callback;
         console.log("join_game_callback subscribed");
     }
 
     // TODO add functionality to check socket is still valid
-    createGame = (board_size, player_count) => {
+    createGame = (board_size: number, player_count: number) => {
         console.log(`Game created player_count=${player_count} board_size=${board_size}`);
         const data = {
             "player_count" : player_count,
@@ -59,7 +59,7 @@ class WebSocketService {
         this.socket.emit("create_game", JSON.stringify(data));
     }
 
-    joinGame = (game_id) => {
+    joinGame = (game_id: string) => {
         console.log(`Joined game ${game_id}`);
         this.socket.emit("join_game", `${game_id}`);
     }

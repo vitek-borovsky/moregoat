@@ -5,7 +5,7 @@ import WebSocketService from './WebSocketService.tsx'
 // Define the state type
 interface GlobalState {
   webSocketService: WebSocketService;
-  value: str | null;
+  value: string | null;
 }
 
 // Initial state

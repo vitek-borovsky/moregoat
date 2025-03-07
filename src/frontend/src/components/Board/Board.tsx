@@ -1,17 +1,17 @@
-import { useState, useEffect } from 'react';
-import Squere from './Squere';
+import { useState } from 'react';
+import Square from './Square';
 import { useAppSelector } from "../../store";
 
 interface BoardProps {
     boardSize: number;
-    placeStone: (col, row) => void;
+    placeStone: (col: number, row: number) => void;
 }
 
 
 const Board: React.FC<BoardProps> = ({ boardSize, placeStone }) => {
     const [board, setBoard] = useState(Array(boardSize * boardSize).fill(-1));
 
-    const handleClick = (index) => {
+    const handleClick = (index: number) => {
         const col = index % boardSize;
         const row = Math.floor(index / boardSize);
         console.log(`clicked on (${col}, ${row}), new value=${board[index] + 1}`);
@@ -39,7 +39,7 @@ const Board: React.FC<BoardProps> = ({ boardSize, placeStone }) => {
               }}
           >
               { Array.from({ length: boardSize * boardSize}).map((_, index) => (
-                  <Squere key={index} color = { board[index] } onClick={ () => handleClick(index) } />
+                  <Square key={index} color = { board[index] } onClick={ () => handleClick(index) } />
               ))}
         </div>
       </>

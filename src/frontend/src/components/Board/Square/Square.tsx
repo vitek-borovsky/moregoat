@@ -1,11 +1,10 @@
-interface SquereProps {
+interface SquareProps {
     color: number;
-    onClick: (number) => void;
+    onClick: () => void;
 }
 
-const Squere: React.FC<SquereProps> = ({ color, onClick }) => {
-
-    const getColor = (value) => {
+const Square: React.FC<SquareProps> = ({ color, onClick }) => {
+    const getColor = (value: number) => {
         if  (value === -1) return "white";
         const colors = [ "blue", "green", "orange", "pink", "purple" ]
         return colors[value];
@@ -22,4 +21,4 @@ const Squere: React.FC<SquereProps> = ({ color, onClick }) => {
     );
 }
 
-export default Squere
+export default Square
