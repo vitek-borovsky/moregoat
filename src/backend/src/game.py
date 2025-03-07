@@ -7,6 +7,9 @@ class Game:
         self.board_size = board_size
         self.next_player_id = 0
 
+        # TODO remove this it's for testing only
+        self._start_game()
+
     def __repr__(self) -> str:
         return f"Game({ self.game_id }, { self.player_count }, board_size={ self.board_size })"
 

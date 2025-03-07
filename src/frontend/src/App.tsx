@@ -3,6 +3,7 @@ import WebSocketService from './WebSocketService.tsx'
 import Board from './components/Board/Board'
 import CreateGame from './components/CreateGame/CreateGame'
 import './App.css'
+import { useAppSelector, useAppDispatch } from "./store";
 
 function App() {
     const wss = useRef(null);
@@ -11,6 +12,10 @@ function App() {
 
     const [boardSize, setBoardSize] = useState<number | null>(null);
     const [playerCount, setPlayerCount] = useState<number | null>(null);
+
+
+    const globalValue = useAppSelector((state) => state.global.value);
+    const dispatch = useAppDispatch();
 
     const join_game = (player_id, board_size, player_count) => {
         setBoardSize(board_size);
@@ -28,6 +33,7 @@ function App() {
     return (
       <>
         <h1>Hello World</h1>
+        <h2>{globalValue}</h2>
         { isConnected && <button onClick={ wss.current.sendEcho }>Send Echo</button> }
         { isConnected && (gameStarted || <CreateGame createGame = { wss.current.createGame }/>) }
         { isConnected && gameStarted && <Board boardSize={boardSize} placeStone={ wss.current.placeStone } /> }

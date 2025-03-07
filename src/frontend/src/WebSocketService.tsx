@@ -33,6 +33,10 @@ class WebSocketService {
         });
     }
 
+    getPlayerId = () => {
+        return this.player_id;
+    }
+
     subscribe_join_game_callback = (callback) => {
         this.join_game_callback = callback;
         console.log("join_game_callback subscribed");

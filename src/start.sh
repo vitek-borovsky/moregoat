@@ -54,7 +54,7 @@ kubectl apply \
     -f backend-deployment.yaml \
     -f frontend-deployment.yaml
 
-while kubectl get pod | tail -n +2 | grep -q -v "Running"; do
+while kubectl get pod --no-headers | grep -q -v -E "Running"; do
     echo "Some pods are not in Running state."
     sleep 5
 done
