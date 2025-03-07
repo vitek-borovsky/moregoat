@@ -3,15 +3,13 @@ import WebSocketService from './WebSocketService.tsx'
 import Board from './components/Board/Board'
 import CreateGame from './components/CreateGame/CreateGame'
 import './App.css'
-import { useAppSelector, useAppDispatch, setValue } from "./store";
+import { useAppSelector } from "./store";
 
 function App() {
     const [gameStarted, setGameStarted] = useState(false);
 
     const [boardSize, setBoardSize] = useState<number | null>(null);
     const [playerCount, setPlayerCount] = useState<number | null>(null);
-
-    const dispatch = useAppDispatch();
 
     const join_game = (player_id, board_size, player_count) => {
         setBoardSize(board_size);
