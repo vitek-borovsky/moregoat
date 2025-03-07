@@ -27,7 +27,7 @@ class Game:
         return id
 
     def place_stone(self, col: int, row: int, player_id):
-        if player_id == self.player_on_turn:
+        if player_id != self.player_on_turn:
             raise RuntimeError("Not your turn") #TODO
         points_changes = self.board.place_stone(col, row, player_id)
         for i, points in enumerate(points_changes):
