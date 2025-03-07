@@ -13,10 +13,10 @@ JOIN_GAME (game_id: str, player_id: int)
 START_GAME()
 # All players joined => Game started
 
-stone_placed(col: int, row: int, game_id: str, player_id: int)
+stone_placed(game_id: str, col: int, row: int, game_id: str, player_id: int)
 # Respones is either STONE_PLACED and optionally STONE_CAPTURED or err #TODO
 
-STONE_PLACED(col: int, row: int)
+STONE_PLACED(game_id: str, col: int, row: int, player_id: int)
 
 STONE_CAPTURED(set[(col: int, row: int)])
 

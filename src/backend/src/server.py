@@ -58,7 +58,9 @@ class Server:
     def handle_stone_placed(self, payload: str):
         print("recieved stone_placed", payload)
         data = json.loads(payload)
-        self.games_manager[data["game_id"]].place_stone(data["col"], data["row"], data["player_id"])
+        game_id, col, row, player_id = data["game_id"], data["col"], data["row"], data["player_id"]
+        self.games_manager[game_id].place_stone(col, row, player_id)
+        self.send_STONE_PLACED(game_id, col, row, player_id)
 
 
     ##############################
@@ -76,4 +78,11 @@ class Server:
         }
         self.socketio.emit("JOIN_GAME", json.dumps(data), room=request.sid)
 
-
+    def send_STONE_PLACED(self, game_id: str, col: int, row: int, player_id: int) -> None:
+        data = {
+            "player_id": player_id,
+            "col": col,
+            "row": row,
+            "player_id": player_id
+        }
+        self.socketio.emit("STONE_PLACED", json.dumps(data), room=game_id)

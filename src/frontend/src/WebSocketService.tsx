@@ -38,6 +38,10 @@ class WebSocketService {
 
             this.join_game_callback(data.player_id, data.board_size);
         });
+
+        this.socket.on("STONE_PLACED", (payload) => {
+            console.log(`STONE_PLACED (${payload})`)
+        });
     }
 
     subscribe_join_game_callback = (callback) => {
@@ -55,7 +59,7 @@ class WebSocketService {
         this.socket.emit("create_game", JSON.stringify(data));
     }
 
-    join_game = (game_id) => {
+    joinGame = (game_id) => {
         console.log(`Joined game ${game_id}`);
         this.socket.emit("join_game", `${game_id}`);
     }
