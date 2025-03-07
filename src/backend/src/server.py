@@ -51,6 +51,9 @@ class Server:
         join_room(game_id)
 
     def handle_join_game(self, game_id: str):
+        if game_id not in self.games_manager:
+            raise NotImplemented
+
         join_room(game_id)
         player_id = self.games_manager[game_id].request_player_id()
         self.send_JOIN_GAME(game_id, player_id, request)

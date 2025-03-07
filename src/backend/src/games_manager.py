@@ -14,6 +14,9 @@ class GamesManager:
     def __getitem__(self, key) -> Game:
         return self.games[key]
 
+    def __contains__(self, key) -> bool:
+        return key in self.games
+
     def create_game(self, player_count: int, board_size: int) -> tuple[str, int]:
         while (game_id := get_random_string(GAME_ID_LENGTH)) in self.games: pass
         self.games[game_id] = Game(game_id, player_count, board_size)
