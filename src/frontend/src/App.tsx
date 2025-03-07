@@ -9,11 +9,9 @@ function App() {
     const [gameStarted, setGameStarted] = useState(false);
 
     const [boardSize, setBoardSize] = useState<number | null>(null);
-    const [playerCount, setPlayerCount] = useState<number | null>(null);
 
-    const join_game = (player_id, board_size, player_count) => {
+    const join_game = (player_id, board_size) => {
         setBoardSize(board_size);
-        setPlayerCount(player_count);
         setGameStarted(true);
     }
 

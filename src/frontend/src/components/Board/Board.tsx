@@ -29,6 +29,7 @@ const Board: React.FC<BoardProps> = ({ boardSize, placeStone }) => {
     return (
       <>
         <h3>{`Player_id: ${ wss.getPlayerId() }`}</h3>
+        <h3>{`Player_count: ${ wss.getPlayerCount() }`}</h3>
         <div
               style = {{
                   display: "grid",

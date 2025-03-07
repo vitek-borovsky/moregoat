@@ -9,6 +9,10 @@ class WebSocketService {
 
     private game_id = null;
     private player_id = null;
+    private player_count = null;
+
+    getPlayerId = () => this.player_id;
+    getPlayerCount = () => this.player_count;
 
     constructor() {
         this.socket.on("connect", () => {
@@ -29,11 +33,11 @@ class WebSocketService {
             const data = JSON.parse(payload);
             this.game_id = data.game_id;
             this.player_id = data.player_id;
-            this.join_game_callback(data.player_id, data.board_size, data.player_count);
+            this.player_count = data.player_count;
+
+            this.join_game_callback(data.player_id, data.board_size);
         });
     }
-
-    getPlayerId = () => this.player_id;
 
     subscribe_join_game_callback = (callback) => {
         this.join_game_callback = callback;
