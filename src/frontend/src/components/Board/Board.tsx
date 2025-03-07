@@ -1,30 +1,35 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Square from './Square';
 import { useAppSelector } from "../../store";
 
 interface BoardProps {
     boardSize: number;
-    placeStone: (col: number, row: number) => void;
 }
 
-
-const Board: React.FC<BoardProps> = ({ boardSize, placeStone }) => {
+const Board: React.FC<BoardProps> = ({ boardSize }) => {
     const [board, setBoard] = useState(Array(boardSize * boardSize).fill(-1));
+
+    const wss = useAppSelector((state) => state.global.webSocketService);
+
+    const stonePlaced = (col: number, row: number, player_id: number) => {
+        const index = boardSize * row + col;
+        setBoard((prevBoard) => {
+          const newBoard = [...prevBoard];
+            newBoard[index] = player_id;
+            return newBoard;
+        });
+    }
+
+    useEffect(() => {
+        wss.subscribeStonePlacedCallback(stonePlaced);
+    }, []);
 
     const handleClick = (index: number) => {
         const col = index % boardSize;
         const row = Math.floor(index / boardSize);
-        console.log(`clicked on (${col}, ${row}), new value=${board[index] + 1}`);
-        setBoard((prevBoard) => {
-          const newBoard = [...prevBoard];
-            newBoard[index] += 1;
-            return newBoard;
-        });
-
-        placeStone(col, row);
+        console.log(`clicked on (${col}, ${row})`);
+        wss.placeStone(col, row);
     }
-
-    const wss = useAppSelector((state) => state.global.webSocketService);
 
     return (
       <>

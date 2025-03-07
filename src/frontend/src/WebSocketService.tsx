@@ -5,7 +5,8 @@ const WEB_SOCKET_URL = "ws://localhost:5000"
 class WebSocketService {
     private socket = io(WEB_SOCKET_URL);
 
-    private join_game_callback: ((playerId: number, boardSize: number) => void) | null = null;
+    private joinGameCallback: ((playerId: number, boardSize: number) => void) | null = null;
+    private stonePlacedCallback: ((col: number, row: number, player_id: number) => void) | null = null;
 
     private game_id: string | null = null;
     private player_id: number | null = null;
@@ -36,18 +37,24 @@ class WebSocketService {
             this.player_id = data.player_id;
             this.player_count = data.player_count;
 
-            this.join_game_callback!(data.player_id, data.board_size);
+            this.joinGameCallback!(data.player_id, data.board_size);
         });
 
         this.socket.on("STONE_PLACED", (payload) => {
             console.log(`STONE_PLACED (${payload})`)
+            const data = JSON.parse(payload);
+
+            const player_id = data.player_id;
+            const col = data.col;
+            const row = data.row;
+
+            this.stonePlacedCallback!(col, row, player_id);
         });
     }
 
-    subscribe_join_game_callback = (callback: (player_id: number, board_size: number) => void) => {
-        this.join_game_callback = callback;
-        console.log("join_game_callback subscribed");
-    }
+    subscribeJoinGameCallback = (callback: (player_id: number, board_size: number) => void) => this.joinGameCallback = callback;
+    subscribeStonePlacedCallback = (callback: (col: number, row: number, player_id: number) => void) => this.stonePlacedCallback = callback;
+
 
     // TODO add functionality to check socket is still valid
     createGame = (board_size: number, player_count: number) => {

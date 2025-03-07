@@ -33,6 +33,12 @@ done
 
 shift $((OPTIND-1))
 
+sendNotification() {
+    local message=$1
+    notify-send "$message"
+}
+
+
 # start minikube if it's not running
 minikube status | grep -q "Running" || minikube start
 
@@ -40,8 +46,10 @@ minikube status | grep -q "Running" || minikube start
 eval $(minikube docker-env)
 
 # build images
-docker build -t moregoat-backend:latest backend/ --network=host
-docker build -t moregoat-frontend:latest frontend/ --network=host
+docker build -t moregoat-backend:latest backend/ --network=host \
+    || (sendNotification "Failed to build backend image" && exit 1)
+docker build -t moregoat-frontend:latest frontend/ --network=host \
+    || (sendNotification "Failed to build frontend image" && exit 1)
 
 # Force restart all pods
 # if their img changed but deployment stayed the same
@@ -75,6 +83,6 @@ cleanup() {
 
 trap cleanup SIGINT
 
-notify-send "New version started"
+sendNotification "New version started succesfully"
 
 wait

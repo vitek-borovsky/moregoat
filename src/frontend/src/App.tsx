@@ -21,13 +21,13 @@ function App() {
     const wss = useAppSelector((state) => state.global.webSocketService);
 
     useEffect(() => {
-        wss.subscribe_join_game_callback(joinGame);
+        wss.subscribeJoinGameCallback(joinGame);
     }, [])
 
     return (
       <>
         { gameStarted || <CreateGame /> }
-        { gameStarted && <Board boardSize={ boardSize! } placeStone={ wss.placeStone } /> }
+        { gameStarted && <Board boardSize={ boardSize! } /> }
       </>
     );
 }
