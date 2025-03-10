@@ -1,4 +1,4 @@
-from error import SquareOccuptied, NotOnBoard
+from error import SelfCapture, SquareOccuptied, NotOnBoard
 
 class Board:
     def __init__(self, player_count: int, board_size: int) -> None:
@@ -129,6 +129,10 @@ class Board:
             captured_player_id = self[col, row]
             point_changes_per_player[captured_player_id] += len(st)
             self._remove_structure(st)
+
+        self_structure = self._get_structure(col, row)
+        if marked_structures == [] and not self._is_structure_alive(self_structure):
+            raise SelfCapture(f"Placing stone in ({col}, {row}) would resolve in a self capture (placing in an eye)")
 
         marked_points = set()
         for st in marked_structures:

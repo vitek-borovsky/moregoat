@@ -5,6 +5,13 @@ class SquareOccuptied(Exception):
     def __init__(self, message: str) -> None:
         super().__init__(message)
 
+class SelfCapture(Exception):
+    """
+    Placing stone in an eye would resolv in imidiate capture of placed stone
+    """
+    def __init__(self, message: str) -> None:
+        super().__init__(message)
+
 class PlayerOutOfTurn(Exception):
     """
     Player tries to place a stone, but it's not his turn
