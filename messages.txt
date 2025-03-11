@@ -7,7 +7,7 @@ create_game (player_count: [ 2, 3, 4, 5 ], board_size: [ 5, 7, ... 19 ])
 
 join_game (game_id: str)
 # Response is either JOIN_GAME or error #TODO
-JOIN_GAME (game_id: str, player_id: int)
+JOIN_GAME (game_id: str, player_id: int, board_size: int, player_count: int)
 # This doubles as response to create game so it needs to return game_id it also works as confirmation that we didn't join wrong game
 
 START_GAME(game_id: str)

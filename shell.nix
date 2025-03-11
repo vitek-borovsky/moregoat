@@ -9,6 +9,9 @@ pkgs.mkShell {
         simple-websocket
         eventlet
         pytest
+        requests
+        pytest-asyncio
+        aiohttp
     ]))
 
     nodejs_20
