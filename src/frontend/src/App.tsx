@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import Board from './components/Board/Board'
+import Game from './components/Game/Game'
 import CreateGame from './components/CreateGame/CreateGame'
 import { useAppSelector } from "./store";
 // @ts-ignore
@@ -27,7 +27,7 @@ function App() {
     return (
       <>
         { gameStarted || <CreateGame /> }
-        { gameStarted && <Board boardSize={ boardSize! } /> }
+        { gameStarted && <Game boardSize={ boardSize!} playerCount={2} /> }
       </>
     );
 }

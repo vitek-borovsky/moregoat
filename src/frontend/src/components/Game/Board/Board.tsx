@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import Square from './Square';
-import { useAppSelector } from "../../store";
+import { useAppSelector } from "../../../store";
 
 const SQUARE_EMPTY = -1
 
@@ -47,9 +47,6 @@ const Board: React.FC<BoardProps> = ({ boardSize }) => {
 
     return (
       <>
-        <h3>{`Player_id: ${ wss.getPlayerId() }`}</h3>
-        <h3>{`Player_count: ${ wss.getPlayerCount() }`}</h3>
-        <h3>{`Game_id: ${ wss.getGameId() }`}</h3>
         <div
               style = {{
                   display: "grid",
