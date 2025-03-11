@@ -27,7 +27,7 @@ class Game:
         self.next_player_id += 1
         return id
 
-    def place_stone(self, col: int, row: int, player_id: int) -> tuple[list[int], set[tuple[int, int]]]:
+    def place_stone(self, col: int, row: int, player_id: int) -> set[tuple[int, int]]:
         if player_id != self.player_on_turn:
             raise PlayerOutOfTurn(f"Player plays but not on turn.\n\tPlayer who played={player_id}\n\tPlayer on turn={self.player_on_turn}")
 
@@ -40,5 +40,15 @@ class Game:
             self.points[i] -= points
 
         self._increase_player_on_turn()
-        return points_changes, captured_stones
+        return captured_stones
+
+    def get_points(self) -> list[int]:
+        """
+        returns COPY of points, can be modified
+
+        Returns:
+          rv[i] <-> points of player with i id
+
+        """
+        return self.points[:]
 

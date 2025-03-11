@@ -8,6 +8,7 @@ class WebSocketService {
     private joinGameCallback: ((playerId: number, boardSize: number, playerCount: number) => void) | null = null;
     private stonePlacedCallback: ((col: number, row: number, player_id: number) => void) | null = null;
     private stoneCapturedCallback: ((stones: number[][]) => void) | null = null;
+    private updatePointsCallback: ((points: number[]) => void) | null = null;
 
     private game_id: string | null = null;
     private player_id: number | null = null;
@@ -65,12 +66,23 @@ class WebSocketService {
                 throw new Error("BAD GAME ID");
             this.stoneCapturedCallback!(captured_stones);
         });
+
+        this.socket.on("POINTS", (payload) => {
+            console.log(`POINTS (${payload})`);
+            const data = JSON.parse(payload);
+
+            const game_id = data.game_id;
+            const points = data.points;
+            if (game_id !== this.game_id)
+                throw new Error("BAD GAME ID");
+            this.updatePointsCallback!(points);
+        });
     }
 
     subscribeJoinGameCallback = (callback: (player_id: number, board_size: number, player_count: number) => void) => this.joinGameCallback = callback;
     subscribeStonePlacedCallback = (callback: (col: number, row: number, player_id: number) => void) => this.stonePlacedCallback = callback;
     subscribeStoneCapturedCallback = (callback: (stones: number[][]) => void) => this.stoneCapturedCallback = callback;
-
+    subscribeUpdatePointsCallback = (callback: (points: number[]) => void) => this.updatePointsCallback = callback;
 
     // TODO add functionality to check socket is still valid
     createGame = (board_size: number, player_count: number) => {

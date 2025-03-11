@@ -8,7 +8,17 @@ interface GameProps {
 }
 
 const Game: React.FC<GameProps> = ({ boardSize, playerCount }) => {
+    const [points, setPoints] = useState<number[]>([ 0, 0 ]);
+
     const wss = useAppSelector((state) => state.global.webSocketService);
+
+    const updatePoints = (points: number[]) => {
+        setPoints(points);
+    }
+
+    useEffect(() => {
+        wss.subscribeUpdatePointsCallback(updatePoints);
+    }, []);
 
     return (
       <>
@@ -26,7 +36,7 @@ const Game: React.FC<GameProps> = ({ boardSize, playerCount }) => {
           }}
           >
           { Array.from({ length: playerCount}).map((_, index) => (
-            <p key={index}>player: {index} points: #TODO</p>
+            <p key={index}>player: {index} points: {points[index]}</p>
           ))}
         </div>
 

@@ -62,10 +62,11 @@ class Server:
         print("recieved stone_placed", payload)
         data = json.loads(payload)
         game_id, col, row, player_id = data["game_id"], data["col"], data["row"], data["player_id"]
-        points_changes, captured_stones = self.games_manager[game_id].place_stone(col, row, player_id)
-        # TODO send points_changes
+        captured_stones = self.games_manager[game_id].place_stone(col, row, player_id)
+        points = self.games_manager[game_id].get_points()
         self.send_STONE_PLACED(game_id, col, row, player_id)
         self.send_STONE_CAPTURED(game_id, captured_stones)
+        self.send_POINTS(game_id, points)
 
 
     ##############################
@@ -99,3 +100,11 @@ class Server:
             "captured_stones": list(captured_stones)
         }
         self.socketio.emit("STONE_CAPTURED", json.dumps(data), room=game_id)
+
+    def send_POINTS(self, game_id: str, points: list[int]) -> None:
+        data = {
+            "game_id": game_id,
+            "points": points,
+        }
+        self.socketio.emit("POINTS", json.dumps(data), room=game_id)
+
