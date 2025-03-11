@@ -17,17 +17,14 @@ const Game: React.FC<GameProps> = ({ boardSize, playerCount }) => {
         <h3>{`Game_id: ${ wss.getGameId() }`}</h3>
         <Board boardSize={boardSize} />
 
-
         <div
-          key={0}
-          onClick={() => handleClick(option)}
-          style={{
-            padding: "10px",
-            border: "1px solid #000",
-            cursor: "pointer",
-            backgroundColor: "red",
+          style = {{
+              display: "grid",
+              gridTemplateColumns: `repeat(${playerCount}, minmax(0, 1fr))`,
+              gridTemplateRows: `repeat(1), minmax(0, 1fr))`,
+              background: "red",
           }}
-        >
+          >
           { Array.from({ length: playerCount}).map((_, index) => (
             <p key={index}>player: {index} points: #TODO</p>
           ))}

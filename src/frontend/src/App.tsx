@@ -11,10 +11,12 @@ function App() {
     // @ts-ignore NotImplemeted
     const [playerId, setPlayerId] = useState<number | null>(null);
     const [boardSize, setBoardSize] = useState<number | null>(null);
+    const [playerCount, setPlayerCount] = useState<number | null>(null);
 
-    const joinGame = (player_id: number, board_size: number) => {
+    const joinGame = (player_id: number, board_size: number, player_count: number) => {
         setPlayerId(player_id);
         setBoardSize(board_size);
+        setPlayerCount(player_count);
         setGameStarted(true);
     }
 
