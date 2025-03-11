@@ -10,7 +10,7 @@ join_game (game_id: str)
 JOIN_GAME (game_id: str, player_id: int)
 # This doubles as response to create game so it needs to return game_id it also works as confirmation that we didn't join wrong game
 
-START_GAME()
+START_GAME(game_id: str)
 # All players joined => Game started
 
 stone_placed(game_id: str, col: int, row: int, game_id: str, player_id: int)
@@ -20,7 +20,9 @@ STONE_PLACED(game_id: str, col: int, row: int, player_id: int)
 
 STONE_CAPTURED(set[(col: int, row: int)])
 
-player_pass()
-PLAYER_PASS(player_id: int)
+player_pass(game_id: str, player_id: int)
+PLAYER_PASS(game_id: str, player_id: int)
 
-GAME_END(dict[player_id: int -> points: int)
+POINTS(game_id: str, dict[player_id: int -> points: int])
+
+GAME_END(game_id: str)
