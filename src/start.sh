@@ -55,12 +55,11 @@ docker build -t moregoat-frontend:latest frontend/ --network=host \
 # if their img changed but deployment stayed the same
 # the change won't be registred and old pods will stay active (thouse based on old img)
 kubectl delete deployments --all
-kubectl delete service moregoat-service
-kubectl delete service moregoat-server-service
+kubectl delete service --all
 
-kubectl apply \
-    -f backend-deployment.yaml \
-    -f frontend-deployment.yaml
+for file in k8s/*.yaml; do
+    kubectl apply -f $file
+done
 
 CONTAINER_COUNT=2
 while [ $(kubectl get pods --no-headers | grep -c "Running") -lt $CONTAINER_COUNT ]; do
