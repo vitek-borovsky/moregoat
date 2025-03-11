@@ -2,7 +2,7 @@ import eventlet
 
 eventlet.monkey_patch()
 
-from server import Server
+from .server import Server
 
 PORT = 5000
 KEY_LENGTH = 3

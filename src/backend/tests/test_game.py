@@ -1,4 +1,4 @@
-from backend.board import Board
+from ..src.board import Board
 
 def test_get_structure():
     g = Board(3, 5)

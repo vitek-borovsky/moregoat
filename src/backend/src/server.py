@@ -1,6 +1,6 @@
 from flask import Flask, request
 from flask_socketio import SocketIO, join_room
-from games_manager import GamesManager
+from .games_manager import GamesManager
 import json
 
 

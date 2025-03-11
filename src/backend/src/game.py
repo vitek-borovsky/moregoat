@@ -1,5 +1,5 @@
-from board import Board
-from error import PlayerOutOfTurn
+from .board import Board
+from .error import PlayerOutOfTurn
 
 class Game:
     def __init__(self, game_id: str, player_count: int, board_size: int) -> None:

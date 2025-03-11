@@ -1,4 +1,4 @@
-from error import SelfCapture, SquareOccuptied, NotOnBoard
+from .error import SelfCapture, SquareOccuptied, NotOnBoard
 
 class Board:
     def __init__(self, player_count: int, board_size: int) -> None:
