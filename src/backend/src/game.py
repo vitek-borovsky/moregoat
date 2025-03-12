@@ -52,3 +52,12 @@ class Game:
         """
         return self.points[:]
 
+    def player_pass(self, player_id: int) -> None:
+        """
+        Throws PlayerOutOfTurn exception if wrong player passed
+        """
+        if player_id != self.player_on_turn:
+            raise PlayerOutOfTurn("Player {player_id} passed, but not on turn\n\tPlayer on turn {self.player_on_turn}")
+
+        self._increase_player_on_turn()
+

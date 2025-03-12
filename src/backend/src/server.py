@@ -26,6 +26,7 @@ class Server:
         self.socketio.on_event("create_game", self.handle_create_game)
         self.socketio.on_event("join_game", self.handle_join_game)
         self.socketio.on_event("stone_placed", self.handle_stone_placed)
+        self.socketio.on_event("player_pass", self.handle_player_pass)
 
     def start_server(self, port: int, debug=False) -> None:
         self.socketio.run(self.app, port=port, debug=debug)
@@ -68,6 +69,13 @@ class Server:
         self.send_STONE_CAPTURED(game_id, captured_stones)
         self.send_POINTS(game_id, points)
 
+    def handle_player_pass(self, payload: str):
+        print(f"Recieved player_pass", payload)
+        data = json.loads(payload)
+        game_id, player_id = data["game_id"], data["player_id"]
+        self.games_manager[game_id].player_pass(player_id)
+        self.send_PLAYER_PASS(game_id, player_id)
+
 
     ##############################
     ##############################
@@ -108,3 +116,9 @@ class Server:
         }
         self.socketio.emit("POINTS", json.dumps(data), room=game_id)
 
+    def send_PLAYER_PASS(self, game_id: str, player_id: int) -> None:
+        data = {
+            "game_id": game_id,
+            "player_id": player_id,
+        }
+        self.socketio.emit("PLAYER_PASS", json.dumps(data), room=game_id)

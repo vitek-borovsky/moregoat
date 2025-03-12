@@ -9,6 +9,7 @@ interface GameProps {
 
 const Game: React.FC<GameProps> = ({ boardSize, playerCount }) => {
     const [points, setPoints] = useState<number[]>([ 0, 0 ]);
+    const [playerOnTurn, setPlayerOnTurn] = useState<number>(0);
 
     const wss = useAppSelector((state) => state.global.webSocketService);
 
@@ -16,8 +17,13 @@ const Game: React.FC<GameProps> = ({ boardSize, playerCount }) => {
         setPoints(points);
     }
 
+    const playerPass = (playerId: int) => {
+        setPlayerOnTurn((playerId + 1) % playerCount)
+    }
+
     useEffect(() => {
         wss.subscribeUpdatePointsCallback(updatePoints);
+        wss.subscribePlayerPassCallback(playerPass);
     }, []);
 
     return (
@@ -39,7 +45,7 @@ const Game: React.FC<GameProps> = ({ boardSize, playerCount }) => {
             <p key={index}>player: {index} points: {points[index]}</p>
           ))}
         </div>
-
+        <button onClick={ () => wss.playerPass() }>Player pass</button>
       </>
     );
 }

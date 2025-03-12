@@ -9,6 +9,7 @@ class WebSocketService {
     private stonePlacedCallback: ((col: number, row: number, player_id: number) => void) | null = null;
     private stoneCapturedCallback: ((stones: number[][]) => void) | null = null;
     private updatePointsCallback: ((points: number[]) => void) | null = null;
+    private playerPassCallback: ((player_id: number) => void) | null = null;
 
     private game_id: string | null = null;
     private player_id: number | null = null;
@@ -77,12 +78,24 @@ class WebSocketService {
                 throw new Error("BAD GAME ID");
             this.updatePointsCallback!(points);
         });
+
+        this.socket.on("PLAYER_PASS", (payload) => {
+            console.log(`PLAYER_PASS (${payload})`);
+            const data = JSON.parse(payload);
+
+            const game_id = data.game_id;
+            const player_id = data.player_id;
+            if (game_id !== this.game_id)
+                throw new Error("BAD GAME ID");
+            this.playerPassCallback!(player_id);
+        });
     }
 
     subscribeJoinGameCallback = (callback: (player_id: number, board_size: number, player_count: number) => void) => this.joinGameCallback = callback;
     subscribeStonePlacedCallback = (callback: (col: number, row: number, player_id: number) => void) => this.stonePlacedCallback = callback;
     subscribeStoneCapturedCallback = (callback: (stones: number[][]) => void) => this.stoneCapturedCallback = callback;
     subscribeUpdatePointsCallback = (callback: (points: number[]) => void) => this.updatePointsCallback = callback;
+    subscribePlayerPassCallback = (callback: (player_id: int) => void) => this.playerPassCallback = callback;
 
     // TODO add functionality to check socket is still valid
     createGame = (board_size: number, player_count: number) => {
@@ -111,6 +124,14 @@ class WebSocketService {
             "row" : row
         };
         this.socket.emit("stone_placed", JSON.stringify(data));
+    }
+
+    playerPass = () => {
+        const data = {
+            "game_id" : this.game_id,
+            "player_id" : this.player_id,
+        };
+        this.socket.emit("player_pass", JSON.stringify(data));
     }
 }
 
