@@ -23,11 +23,12 @@ jobs:
 
       - name: Run Pytest
         working-directory: src/backend
-        run: pytest tests/
+        run: pytest tests/ --junit-xml=report.xml
 
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: pytest-results
-          path: report.json
+          path: src/backend/report.xml
+          retention-days: 7
