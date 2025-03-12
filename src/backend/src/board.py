@@ -132,6 +132,7 @@ class Board:
 
         self_structure = self._get_structure(col, row)
         if marked_structures == [] and not self._is_structure_alive(self_structure):
+            self[col, row] = self.SQUERE_EMPTY
             raise SelfCapture(f"Placing stone in ({col}, {row}) would resolve in a self capture (placing in an eye)")
 
         marked_points = set()
