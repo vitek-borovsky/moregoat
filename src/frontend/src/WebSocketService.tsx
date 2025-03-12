@@ -5,7 +5,7 @@ const WEB_SOCKET_URL = "ws://localhost:5000"
 class WebSocketService {
     private socket = io(WEB_SOCKET_URL);
 
-    private joinGameCallback: ((playerId: number, boardSize: number, playerCount: number) => void) | null = null;
+    private joinGameCallback: ((boardSize: number) => void) | null = null;
     private stonePlacedCallback: ((col: number, row: number, player_id: number) => void) | null = null;
     private stoneCapturedCallback: ((stones: number[][]) => void) | null = null;
     private updatePointsCallback: ((points: number[]) => void) | null = null;
@@ -40,7 +40,7 @@ class WebSocketService {
             this.player_id = data.player_id;
             this.player_count = data.player_count;
 
-            this.joinGameCallback!(data.player_id, data.board_size, data.player_count);
+            this.joinGameCallback!(data.board_size);
         });
 
         this.socket.on("STONE_PLACED", (payload) => {
@@ -91,11 +91,11 @@ class WebSocketService {
         });
     }
 
-    subscribeJoinGameCallback = (callback: (player_id: number, board_size: number, player_count: number) => void) => this.joinGameCallback = callback;
+    subscribeJoinGameCallback = (callback: (board_size: number) => void) => this.joinGameCallback = callback;
     subscribeStonePlacedCallback = (callback: (col: number, row: number, player_id: number) => void) => this.stonePlacedCallback = callback;
     subscribeStoneCapturedCallback = (callback: (stones: number[][]) => void) => this.stoneCapturedCallback = callback;
     subscribeUpdatePointsCallback = (callback: (points: number[]) => void) => this.updatePointsCallback = callback;
-    subscribePlayerPassCallback = (callback: (player_id: int) => void) => this.playerPassCallback = callback;
+    subscribePlayerPassCallback = (callback: (player_id: number) => void) => this.playerPassCallback = callback;
 
     // TODO add functionality to check socket is still valid
     createGame = (board_size: number, player_count: number) => {

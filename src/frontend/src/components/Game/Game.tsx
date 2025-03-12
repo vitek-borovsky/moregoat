@@ -17,7 +17,7 @@ const Game: React.FC<GameProps> = ({ boardSize, playerCount }) => {
         setPoints(points);
     }
 
-    const playerPass = (playerId: int) => {
+    const playerPass = (playerId: number) => {
         setPlayerOnTurn((playerId + 1) % playerCount)
     }
 
@@ -28,6 +28,7 @@ const Game: React.FC<GameProps> = ({ boardSize, playerCount }) => {
 
     return (
       <>
+        <h3>{`Player on turn ${ playerOnTurn }`}</h3>
         <h3>{`Player_id: ${ wss.getPlayerId() }`}</h3>
         <h3>{`Player_count: ${ wss.getPlayerCount() }`}</h3>
         <h3>{`Game_id: ${ wss.getGameId() }`}</h3>
