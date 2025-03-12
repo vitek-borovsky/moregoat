@@ -1,0 +1,19 @@
+- Linters
+
+- Static analysis of security
+    - bandit
+
+- Unit tests
+    - pytest
+    - react components inner
+
+- Build images
+    - backend
+    - frontend
+
+- Integration testing
+    - starting server and trying requests
+    # TODO how to access "what we see" testing of frontend
+    # maybe we can access the html directly via key argument
+
+

@@ -1,6 +1,5 @@
 pytest
 socketio
-json
 requests
 asyncio
 pytest-asyncio
