@@ -1,14 +1,19 @@
 from .error import SelfCapture, SquareOccuptied, NotOnBoard
 
+
 class Board:
     def __init__(self, player_count: int, board_size: int) -> None:
         self.player_count = player_count
         self.board_size = board_size
         self.SQUERE_EMPTY = -1
-        self.board: list[list[int]] = [ [ self.SQUERE_EMPTY for _ in range(board_size) ] for _ in range(board_size) ]
+        self.board: list[list[int]] = [
+            [self.SQUERE_EMPTY for _ in range(board_size)]
+            for _ in range(board_size)]
 
     def __repr__(self) -> str:
-        return f"Board(player_count={ self.player_count }, board_size={ self.board_size })"
+        return f"""Board(
+            player_count={ self.player_count },
+            board_size={ self.board_size })"""
 
     def __getitem__(self, index: tuple[int, int]) -> int:
         col, row = index
@@ -19,16 +24,24 @@ class Board:
         self.board[row][col] = value
 
     def _is_on_board(self, col, row):
-        if col not in range(0, self.board_size): return False
-        if row not in range(0, self.board_size): return False
+        if col not in range(0, self.board_size):
+            return False
+        if row not in range(0, self.board_size):
+            return False
         return True
 
     def _get_neighbours(self, col, row) -> set[tuple[int, int]]:
-        neigh = lambda x, y: { (x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1) }
-        return { (col_, row_) for col_, row_ in neigh(col, row) if self._is_on_board(col_, row_) }
+        def neigh(x: int, y: int):
+            return {(x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)}
+
+        return {(col_, row_)
+                for col_, row_ in neigh(col, row)
+                if self._is_on_board(col_, row_)}
 
     def print_board(self) -> None:
-        print("\n".join([ " ".join([ f"{x:2}" for x in row ]) for row in self.board ]))
+        print("\n".join(
+            [" ".join([f"{x:2}" for x in row])
+                for row in self.board]))
 
     def _get_structure(self, col, row) -> set[tuple[int, int]]:
         """
@@ -36,12 +49,12 @@ class Board:
 
         If col or row are out of range it returns set()
         """
-        if not self._is_on_board(col, row): return set()
+        if not self._is_on_board(col, row):
+            return set()
 
         structure = set()
         self._get_structure_impl(col, row, self[col, row], structure)
         return structure
-
 
     def _get_structure_impl(self, col, row, value, structure) -> None:
         """
@@ -49,10 +62,14 @@ class Board:
 
         If col or row are out of range it returns set()
         """
-        if not self._is_on_board(col, row): return
-        if self[col, row] != value: return
+        if not self._is_on_board(col, row):
+            return
 
-        if (col, row) in structure: return structure
+        if self[col, row] != value:
+            return
+
+        if (col, row) in structure:
+            return structure
 
         structure.add((col, row))
         for col_, row_ in self._get_neighbours(col, row):
@@ -77,7 +94,9 @@ class Board:
         for col, row in structure:
             self[col, row] = self.SQUERE_EMPTY
 
-    def place_stone(self, col: int, row: int, player_id: int) -> tuple[list[int], set[tuple[int, int]]]:
+    def place_stone(
+            self, col: int, row: int, player_id: int
+            ) -> tuple[list[int], set[tuple[int, int]]]:
         """
         Places a stone of given player and removes captured stones
 
@@ -100,24 +119,27 @@ class Board:
             raise NotOnBoard(f"({col}, {row}) is not a valid square")
 
         if self[col, row] != self.SQUERE_EMPTY:
-            raise SquareOccuptied(f"On ({col}, {row}) is already stone of player {self[col, row]}")
+            raise SquareOccuptied(
+                f"""On ({col}, {row}) is occupied.
+                Already occupied by player {self[col, row]}""")
 
         self[col, row] = player_id
         neighbours = self._get_neighbours(col, row)
-        # neighbour_structures = [ self._get_structure(*neigh) for neigh in neighbours ]
         neighbour_structures = []
         for neigh in neighbours:
             st = self._get_structure(*neigh)
-            if st in neighbour_structures: continue
+            if st in neighbour_structures:
+                continue
             neighbour_structures.append(st)
 
         # remove self-structure
         if self._get_structure(col, row) in neighbour_structures:
             neighbour_structures.remove(self._get_structure(col, row))
 
-        point_changes_per_player = [ 0 for _ in range(self.player_count) ]
+        point_changes_per_player = [0 for _ in range(self.player_count)]
 
-        # We need to mark dead structures first because they can be from diffrent players
+        # We need to mark dead structures first because they can be
+        # from diffrent players
         # and capturing one can make the other "alive"
         marked_structures: list[set[tuple[int, int]]] = []
         for st in neighbour_structures:
@@ -131,9 +153,11 @@ class Board:
             self._remove_structure(st)
 
         self_structure = self._get_structure(col, row)
-        if marked_structures == [] and not self._is_structure_alive(self_structure):
+        if marked_structures == [] \
+                and not self._is_structure_alive(self_structure):
             self[col, row] = self.SQUERE_EMPTY
-            raise SelfCapture(f"Placing stone in ({col}, {row}) would resolve in a self capture (placing in an eye)")
+            raise SelfCapture(f"""Cannot place stone on ({col}, {row})
+              would resolve in a self capture (placing in an eye)""")
 
         marked_points = set()
         for st in marked_structures:

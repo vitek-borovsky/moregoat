@@ -15,10 +15,11 @@ class Server:
     """
     def __init__(self, app_name: str) -> None:
         self.app = Flask(app_name)
-        self.socketio = SocketIO(self.app, cors_allowed_origins="*", async_mode="eventlet")
-        self.games_manager = GamesManager()
+        self.socketio = SocketIO(
+            self.app, cors_allowed_origins="*",
+            async_mode="eventlet")
 
-        self.app.add_url_rule("/hello", "hello", lambda : "hello")
+        self.games_manager = GamesManager()
 
         self.socketio.on_event("connect", self.handle_connect)
         self.socketio.on_event("disconnect", self.handle_disconnect)
@@ -47,13 +48,14 @@ class Server:
         assert player_count in range(2, 6)
         assert board_size in range(5, 21, 2)
 
-        game_id, player_id = self.games_manager.create_game(player_count, board_size)
+        game_id, player_id = self.games_manager.create_game(
+            player_count, board_size)
         self.send_JOIN_GAME(game_id, player_id, request)
         join_room(game_id)
 
     def handle_join_game(self, game_id: str):
         if game_id not in self.games_manager:
-            raise NotImplemented
+            raise NotImplementedError
 
         join_room(game_id)
         player_id = self.games_manager[game_id].request_player_id()
@@ -62,20 +64,22 @@ class Server:
     def handle_stone_placed(self, payload: str):
         print("recieved stone_placed", payload)
         data = json.loads(payload)
-        game_id, col, row, player_id = data["game_id"], data["col"], data["row"], data["player_id"]
-        captured_stones = self.games_manager[game_id].place_stone(col, row, player_id)
-        points = self.games_manager[game_id].get_points()
+        game_id, col, row, player_id = \
+            data["game_id"], data["col"], data["row"], data["player_id"]
+
+        game = self.games_manager[game_id]
+        captured_stones = game.place_stone(col, row, player_id)
+        points = game.get_points()
         self.send_STONE_PLACED(game_id, col, row, player_id)
         self.send_STONE_CAPTURED(game_id, captured_stones)
         self.send_POINTS(game_id, points)
 
     def handle_player_pass(self, payload: str):
-        print(f"Recieved player_pass", payload)
+        print("Recieved player_pass", payload)
         data = json.loads(payload)
         game_id, player_id = data["game_id"], data["player_id"]
         self.games_manager[game_id].player_pass(player_id)
         self.send_PLAYER_PASS(game_id, player_id)
-
 
     ##############################
     ##############################
@@ -92,7 +96,9 @@ class Server:
         }
         self.socketio.emit("JOIN_GAME", json.dumps(data), room=request.sid)
 
-    def send_STONE_PLACED(self, game_id: str, col: int, row: int, player_id: int) -> None:
+    def send_STONE_PLACED(
+            self, game_id: str, col: int, row: int, player_id: int
+            ) -> None:
         data = {
             "game_id": game_id,
             "player_id": player_id,
@@ -101,8 +107,11 @@ class Server:
         }
         self.socketio.emit("STONE_PLACED", json.dumps(data), room=game_id)
 
-    def send_STONE_CAPTURED(self, game_id: str, captured_stones: set[tuple[int, int]]) -> None:
-        if len(captured_stones) == 0: return
+    def send_STONE_CAPTURED(
+            self, game_id: str, captured_stones: set[tuple[int, int]]
+            ) -> None:
+        if len(captured_stones) == 0:
+            return
         data = {
             "game_id": game_id,
             "captured_stones": list(captured_stones)

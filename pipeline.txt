@@ -1,4 +1,5 @@
 - Linters
+    - flake8
 
 - Static analysis of security
     - bandit

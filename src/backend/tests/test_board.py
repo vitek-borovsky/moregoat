@@ -1,6 +1,11 @@
+# flake8: noqa: E231
+# Silences wrong whitespace in lists (needed for building boards)
+# TODO this silences all error for some reason
+
 from ..src.board import Board
-from ..src.error import *
+from ..src.error import SquareOccuptied, SelfCapture
 import pytest
+
 
 @pytest.fixture
 def board():
@@ -53,9 +58,10 @@ def test_place_stone():
         [  0, 0, 1,-1, 2],
         [  2, 2, 2, 2, 2]]
 
-    assert board.place_stone(3, 3, 0) == ([0, 1, 10], \
-      { (4, 4), (2, 4), (4, 0), (0, 4), (3, 4), (4, 3), \
+    assert board.place_stone(3, 3, 0) == ([0, 1, 10],
+      { (4, 4), (2, 4), (4, 0), (0, 4), (3, 4), (4, 3),
         (4, 2), (3, 0), (2, 3), (1, 4), (4, 1) })
+
     assert board.board == [
         [ -1, 0, 1,-1,-1],
         [ -1, 1, 1, 1,-1],
@@ -63,8 +69,10 @@ def test_place_stone():
         [  0, 0,-1, 0,-1],
         [ -1,-1,-1,-1,-1]]
 
+
 def test_square_occupied(board):
-    """Check for all squeres that are occupied and try to put stone in them, expect error"""
+    """Check for all squeres that are occupied and
+    try to put stone in them, expect error"""
     board_raw = board.board
     for row, row_data in enumerate(board_raw):
         for col, squere in enumerate(row_data):
