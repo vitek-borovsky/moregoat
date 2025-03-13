@@ -2,9 +2,10 @@ import { useState } from 'react'
 import Selector from './Selector'
 import { useAppSelector } from "../../store";
 
-interface CreateGameProps { }
+// interface CreateGameProps { }
 
-const CreateGame: React.FC<CreateGameProps> = ({ }) => {
+// const CreateGame: React.FC<CreateGameProps> = ({ }) => {
+const CreateGame: React.FC<object> = () => {
     const [playerCount, setPlayerCount] = useState(2);
     const [boardSize, setBoardSize] = useState(5);
     const [gameId, setGameId] = useState("");

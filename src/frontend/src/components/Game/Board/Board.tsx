@@ -13,30 +13,30 @@ const Board: React.FC<BoardProps> = ({ boardSize }) => {
 
     const wss = useAppSelector((state) => state.global.webSocketService);
 
-    const stonePlaced = (col: number, row: number, player_id: number) => {
-        const index = boardSize * row + col;
-        setBoard((prevBoard) => {
-            let newBoard = [...prevBoard];
-            newBoard[index] = player_id;
-            return newBoard;
-        });
-    }
-
-    const stoneCaptured = (stones: number[][]) => {
-        setBoard((prevBoard) => {
-            let newBoard = [...prevBoard];
-            stones.forEach(([col, row]) => {
-                const index = boardSize * row + col;
-                newBoard[index] = SQUARE_EMPTY;
-            });
-            return newBoard;
-        });
-    }
-
     useEffect(() => {
+        const stonePlaced = (col: number, row: number, player_id: number) => {
+            const index = boardSize * row + col;
+            setBoard((prevBoard) => {
+                const newBoard = [...prevBoard];
+                newBoard[index] = player_id;
+                return newBoard;
+            });
+        }
+
+        const stoneCaptured = (stones: number[][]) => {
+            setBoard((prevBoard) => {
+                const newBoard = [...prevBoard];
+                stones.forEach(([col, row]) => {
+                    const index = boardSize * row + col;
+                    newBoard[index] = SQUARE_EMPTY;
+                });
+                return newBoard;
+            });
+        }
+
         wss.subscribeStonePlacedCallback(stonePlaced);
         wss.subscribeStoneCapturedCallback(stoneCaptured);
-    }, []);
+    }, [wss, boardSize, board, setBoard]);
 
     const handleClick = (index: number) => {
         const col = index % boardSize;

@@ -13,18 +13,17 @@ const Game: React.FC<GameProps> = ({ boardSize, playerCount }) => {
 
     const wss = useAppSelector((state) => state.global.webSocketService);
 
-    const updatePoints = (points: number[]) => {
-        setPoints(points);
-    }
-
-    const playerPass = (playerId: number) => {
-        setPlayerOnTurn((playerId + 1) % playerCount)
-    }
 
     useEffect(() => {
+            const updatePoints = (points: number[]) =>
+                setPoints(points);
+
+            const playerPass = (playerId: number) =>
+                setPlayerOnTurn((playerId + 1) % playerCount)
+
         wss.subscribeUpdatePointsCallback(updatePoints);
         wss.subscribePlayerPassCallback(playerPass);
-    }, []);
+    }, [wss, points, playerCount]);
 
     return (
       <>

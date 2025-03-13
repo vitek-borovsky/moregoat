@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import Game from './components/Game/Game'
 import CreateGame from './components/CreateGame/CreateGame'
 import { useAppSelector } from "./store";
-// @ts-ignore
 import './App.css'
 
 function App() {
@@ -16,10 +15,9 @@ function App() {
     }
 
     const wss = useAppSelector((state) => state.global.webSocketService);
-
     useEffect(() => {
         wss.subscribeJoinGameCallback(joinGame);
-    }, [])
+    }, [wss])
 
     return (
       <>
