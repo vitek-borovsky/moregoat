@@ -16,10 +16,10 @@ spec:
     spec:
       containers:
       - name: moregoat-backend
-        image: moregoat-backend:latest
-        imagePullPolicy: Never
+        image: vitkovec/moregoat-backend:latest
         ports:
         - containerPort: 5000
+          name: backend-port
 ---
 apiVersion: v1
 kind: Service
@@ -31,5 +31,5 @@ spec:
   ports:
     - protocol: TCP
       port: 5000
-      targetPort: 5000
+      targetPort: backend-port
   type: ClusterIP

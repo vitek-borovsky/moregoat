@@ -9,8 +9,6 @@ usage() {
 Usage: ./start.sh [--verbose]
        ./start.sh [-h --help]
 
-It's expected that minikube is already running
-
 Options:
   -h, --help      Print this message and exit
 EOF
@@ -42,15 +40,6 @@ sendNotification() {
 # start minikube if it's not running
 minikube status | grep -q "Running" || minikube start
 
-# set docker daemont to minikube-docker
-eval $(minikube docker-env)
-
-# build images
-docker build -t moregoat-backend:latest backend/ --network=host \
-    || (sendNotification "Failed to build backend image" && exit 1)
-docker build -t moregoat-frontend:latest frontend/ --network=host \
-    || (sendNotification "Failed to build frontend image" && exit 1)
-
 # Force restart all pods
 # if their img changed but deployment stayed the same
 # the change won't be registred and old pods will stay active (thouse based on old img)
@@ -67,10 +56,12 @@ while [ $(kubectl get pods --no-headers | grep -c "Running") -lt $CONTAINER_COUN
     sleep 5
 done
 
+echo "Starting port forwarding"
 kubectl port-forward svc/moregoat-service 5173:5173 &
 moregoat_service_PID=$!
 kubectl port-forward svc/moregoat-server-service 5000:5000 &
 moregoat_server_service_PID=$!
+echo "Port forwarding started"
 
 # # Function to clean up processes on Ctrl+C
 cleanup() {
@@ -82,6 +73,6 @@ cleanup() {
 
 trap cleanup SIGINT
 
-sendNotification "New version started succesfully"
+sendNotification "Cluster started succesfully"
 
 wait

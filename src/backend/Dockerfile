@@ -14,4 +14,4 @@ RUN python -m pip install --no-cache-dir \
 
 EXPOSE 5000
 
-ENTRYPOINT [ "python", "src/main.py" ]
+ENTRYPOINT [ "python", "main.py" ]

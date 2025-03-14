@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import Game from './components/Game/Game'
 import CreateGame from './components/CreateGame/CreateGame'
 import { useAppSelector } from "./store";
+// @ts-expect-error Not sure why this gives an error the file is acctually imported
 import './App.css'
 
 function App() {
