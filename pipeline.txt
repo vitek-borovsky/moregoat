@@ -1,8 +1,7 @@
-- Linters
-    - flake8
-
-- Static analysis of security
-    - bandit
+- Static analysis
+    - ESlint (typescript linter)
+    - flake8 (python linter)
+    - bandit (python security)
 
 - Unit tests
     - pytest
@@ -16,5 +15,3 @@
     - starting server and trying requests
     # TODO how to access "what we see" testing of frontend
     # maybe we can access the html directly via key argument
-
-

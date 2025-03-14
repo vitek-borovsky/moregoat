@@ -1,6 +1,0 @@
-pytest
-socketio
-requests
-asyncio
-pytest-asyncio
-aiohttp
