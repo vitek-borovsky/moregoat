@@ -1,17 +1,25 @@
 interface SelectorProps {
   options: number[];
   defaultValue: number;
+  rows: number
   setter: React.Dispatch<React.SetStateAction<number>>;
-
 }
 
-const Selector: React.FC<SelectorProps> = ({ options, defaultValue, setter }) => {
+const Selector: React.FC<SelectorProps> = ({ options, defaultValue, rows, setter }) => {
   const handleClick = (option: number) => {
     setter(option);
   };
+  const element_count = options.length;
+   const column_count = Math.floor(options.length / rows);
 
   return (
-    <div style={{ display: "flex", justifyContent: "space-around" }}>
+    <div
+    style={{
+        display: "grid",
+        gridTemplateColumns: `repeat(${column_count}, minmax(0, 1fr))`,
+        gridTemplateRows: `repeat(${rows}, minmax(0, 1fr))`,
+        justifyContent: "space-around"
+    }}>
       {options.map((option, index) => (
         <div
           key={index}

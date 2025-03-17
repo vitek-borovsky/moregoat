@@ -12,13 +12,32 @@ const CreateGame: React.FC<object> = () => {
 
     const wss = useAppSelector((state) => state.global.webSocketService);
 
+
+
     return (
         <>
           <div>
-            <Selector options = { [ 2, 3, 4, 5 ] } defaultValue = { playerCount } setter = { setPlayerCount }/>
-            <Selector options = { [ 5, 7, 9, 11, 13, 15, 17, 19 ] } defaultValue = { boardSize } setter = { setBoardSize } />
-            <button onClick = { () => wss.createGame(boardSize, playerCount) }>Start Game</button>
+            <div>
+              <h2>Select Number of players</h2>
+              <Selector
+                  options = { [ 2, 3, 4, 5 ] }
+                  defaultValue = { playerCount }
+                  rows = { 1 }
+                  setter = { setPlayerCount }
+              />
+            </div>
+            <div>
+              <h2>Select board size</h2>
+              <Selector
+                  options = { [ 5, 7, 9, 11, 13, 15, 17, 19 ] }
+                  defaultValue = { boardSize }
+                  rows = { 2 }
+                  setter = { setBoardSize }
+              />
+              <button onClick = { () => wss.createGame(boardSize, playerCount) }>Start Game</button>
+            </div>
           </div>
+
           <div>
             <input
               type="text"
