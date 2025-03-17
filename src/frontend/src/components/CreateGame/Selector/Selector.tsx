@@ -10,7 +10,7 @@ const Selector: React.FC<SelectorProps> = ({ options, defaultValue, rows, setter
     setter(option);
   };
   const element_count = options.length;
-   const column_count = Math.floor(options.length / rows);
+  const column_count = Math.floor(element_count / rows);
 
   return (
     <div
