@@ -60,6 +60,8 @@ class Server:
         join_room(game_id)
         player_id = self.games_manager[game_id].request_player_id()
         self.send_JOIN_GAME(game_id, player_id, request)
+        if self.games_manager[game_id].try_start_game():
+            self.send_START_GAME(game_id)
 
     def handle_stone_placed(self, payload: str):
         print("recieved stone_placed", payload)
@@ -95,6 +97,13 @@ class Server:
             "player_count": self.games_manager[game_id].player_count,
         }
         self.socketio.emit("JOIN_GAME", json.dumps(data), room=request.sid)
+
+
+    def send_START_GAME(self, game_id):
+        data = {
+            "game_id": game_id,
+        }
+        self.socketio.emit("START_GAME", json.dumps(data), room=request.sid)
 
     def send_STONE_PLACED(
             self, game_id: str, col: int, row: int, player_id: int
