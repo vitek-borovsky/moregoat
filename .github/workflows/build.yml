@@ -4,6 +4,7 @@ on:
     workflows: ["Test"]
     types:
       - completed
+    status: success
 
 jobs:
   build-backend:

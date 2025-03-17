@@ -4,6 +4,7 @@ on:
     workflows: ["Static Analysis"]
     types:
       - completed
+    status: success
 
 jobs:
   test-pytest:
