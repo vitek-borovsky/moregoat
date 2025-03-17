@@ -93,11 +93,10 @@ class Server:
         data = {
             "game_id": game_id,
             "player_id": player_id,
-            "board_size": self.games_manager[game_id].board_size,
-            "player_count": self.games_manager[game_id].player_count,
+            "board_size": self.games_manager[game_id]._board_size,
+            "player_count": self.games_manager[game_id]._player_count,
         }
         self.socketio.emit("JOIN_GAME", json.dumps(data), room=request.sid)
-
 
     def send_START_GAME(self, game_id):
         data = {
